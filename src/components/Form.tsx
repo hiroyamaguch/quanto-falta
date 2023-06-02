@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -15,7 +15,7 @@ export const Form: React.FC = () => {
     resolver: yupResolver(calcValidator),
   })
 
-  const { handleSubmit, watch, setFocus } = formConfig
+  const { handleSubmit } = formConfig
 
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
@@ -45,22 +45,6 @@ export const Form: React.FC = () => {
   }
 
   const [hoursLeft, setHoursLeft] = useState(480)
-
-  const first = watch('first')
-  const second = watch('second')
-  const third = watch('third')
-
-  useEffect(() => {
-    if (first?.length === 5) {
-      setFocus('second')
-    }
-    if (second?.length === 5) {
-      setFocus('third')
-    }
-    if (third?.length === 5) {
-      setFocus('fourth')
-    }
-  }, [first?.length, second?.length, setFocus, third?.length])
 
   return (
     <FormProvider {...formConfig}>
