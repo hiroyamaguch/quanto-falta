@@ -77,22 +77,15 @@ export const Form: React.FC = () => {
           </p>
         )}
 
-        {hoursLeft > 0 ? (
+        <div className="flex w-full items-center justify-center px-4">
           <iframe
-            src="https://giphy.com/embed/Dh5q0sShxgp13DwrvG"
-            width="480"
-            height="296"
-            className="giphy-embed"
-            allowFullScreen
+            src={
+              hoursLeft > 0
+                ? 'https://giphy.com/embed/Dh5q0sShxgp13DwrvG'
+                : 'https://giphy.com/embed/G96zgIcQn1L2xpmdxi/video'
+            }
           ></iframe>
-        ) : (
-          <iframe
-            height="100%"
-            src="https://giphy.com/embed/G96zgIcQn1L2xpmdxi/video"
-            width="100%"
-            allowFullScreen
-          ></iframe>
-        )}
+        </div>
       </form>
     </FormProvider>
   )
