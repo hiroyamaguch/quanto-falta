@@ -32,21 +32,16 @@ export const Input: React.FC<InputProps> = ({
   const borderFocusColor = hasFocus ? 'border-orange-600' : 'border-transparent'
 
   return (
-    <div className="flex items-center justify-center space-x-4">
+    <div className="flex w-full items-center justify-between space-x-4">
       {label && <p>{label}</p>}
-      <div
-        className={`relative rounded-lg border-2 ${borderFocusColor}`}
+      <input
+        type="text"
+        className={`h-[48px] max-w-[200px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-none ${borderFocusColor}`}
+        autoComplete="off"
         onFocus={handleFocus}
-        onBlur={handleBlur}
-      >
-        <input
-          type="text"
-          className="h-[48px] w-full rounded-lg bg-input-600 px-4 py-2 outline-none"
-          autoComplete="off"
-          {...register(name)}
-          {...rest}
-        />
-      </div>
+        {...register(name, { onBlur: handleBlur })}
+        {...rest}
+      />
     </div>
   )
 }
