@@ -1,6 +1,11 @@
 'use client'
 
-import React, { InputHTMLAttributes, useCallback, useState } from 'react'
+import React, {
+  InputHTMLAttributes,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import { useFormContext } from 'react-hook-form'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -17,9 +22,16 @@ export const Input: React.FC<InputProps> = ({
   containerStyle = {},
   ...rest
 }) => {
-  const { register } = useFormContext()
-
   const [hasFocus, setHasFocus] = useState(false)
+
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext()
+
+  const errorMessage: string | undefined = errors?.[name]?.message?.toString()
+
+  const hasError = useMemo((): boolean => !!errorMessage, [errorMessage])
 
   const handleFocus = useCallback(() => {
     setHasFocus(true)
@@ -33,7 +45,14 @@ export const Input: React.FC<InputProps> = ({
 
   return (
     <div className="flex w-full items-center justify-between space-x-4">
-      {label && <p>{label}</p>}
+      {label && (
+        <div className="flex-col items-center justify-start">
+          <p>{label}</p>
+          {hasError && (
+            <p className="pt-1 text-sm text-red-600">{errorMessage}</p>
+          )}
+        </div>
+      )}
       <input
         type="text"
         className={`h-[48px] max-w-[150px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-none ${borderFocusColor}`}

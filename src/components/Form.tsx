@@ -1,21 +1,39 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { Input } from './Input'
 import { calcValidator, CalcInputsTypes } from '@/validators/calc.validator'
 import { parseStringToDate } from '@/helpers/parseHours'
-import { differenceInMinutes } from 'date-fns'
+import { add, differenceInMinutes, format } from 'date-fns'
+import { ProgressLine } from './ProgressLine'
+
+const VALUES_LS_KEY = '@QuantoFalta:values'
 
 export const Form: React.FC = () => {
+  const [minutesLeft, setMinutesLeft] = useState(480)
+
   const formConfig = useForm<CalcInputsTypes>({
     mode: 'onChange',
     resolver: yupResolver(calcValidator),
   })
 
-  const { handleSubmit } = formConfig
+  const { handleSubmit, reset, setValue } = formConfig
+
+  const percentage = useMemo(() => {
+    const percentageLeft = (minutesLeft / 480) * 100
+    const percentage = 100 - Math.round(percentageLeft)
+
+    return percentage
+  }, [minutesLeft])
+
+  const handleReset = useCallback(() => {
+    setMinutesLeft(480)
+    localStorage.removeItem(VALUES_LS_KEY)
+    reset()
+  }, [reset])
 
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
@@ -41,16 +59,30 @@ export const Form: React.FC = () => {
       totalHoursWorked += differenceInMinutes(parsedFourth, parsedThird)
     }
 
-    setHoursLeft(480 - totalHoursWorked)
+    setMinutesLeft(480 - totalHoursWorked)
+    localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
 
-  const [hoursLeft, setHoursLeft] = useState(480)
+  useEffect(() => {
+    const data = localStorage.getItem(VALUES_LS_KEY)
+
+    if (data) {
+      const dataParsed = JSON.parse(data) as CalcInputsTypes
+
+      setValue('first', dataParsed.first)
+      setValue('second', dataParsed.second)
+      setValue('third', dataParsed.third)
+      setValue('fourth', dataParsed.fourth)
+
+      onSubmit(dataParsed)
+    }
+  }, [setValue])
 
   return (
     <FormProvider {...formConfig}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full max-w-[300px] flex-col items-center space-y-6 "
+        className="flex w-full max-w-[300px] flex-col items-center space-y-6"
       >
         <div className="flex w-full flex-col space-y-3 ">
           <Input name="first" label="Primeira entrada" type="time" />
@@ -66,26 +98,25 @@ export const Form: React.FC = () => {
           Calcular
         </button>
 
-        {hoursLeft > 0 ? (
-          <p className="text-center text-red-600">
-            Faltam {hoursLeft} minutos para finalizar o expediente
-          </p>
-        ) : (
-          <p className="text-center text-green-600">
-            Seu expediente já foi finalizado e conseguiu {hoursLeft * -1}{' '}
-            minutos de horas extras!
-          </p>
-        )}
+        <button type="reset" onClick={handleReset}>
+          limpar formulário
+        </button>
 
-        <div className="flex w-full items-center justify-center px-4">
-          <iframe
-            src={
-              hoursLeft > 0
-                ? 'https://giphy.com/embed/Dh5q0sShxgp13DwrvG'
-                : 'https://giphy.com/embed/G96zgIcQn1L2xpmdxi/video'
-            }
-          ></iframe>
-        </div>
+        <ProgressLine percentage={percentage} />
+
+        <ul className="text-center">
+          <li>
+            {percentage < 100
+              ? `Faltam ${minutesLeft} minutos`
+              : `Foi realizado ${minutesLeft * -1} minutos de horas extras`}
+          </li>
+          {percentage < 100 && (
+            <li>
+              Previsão de saída:{' '}
+              {format(add(new Date(), { minutes: minutesLeft }), 'HH:mm')}
+            </li>
+          )}
+        </ul>
       </form>
     </FormProvider>
   )
