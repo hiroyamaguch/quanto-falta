@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
@@ -18,12 +19,12 @@ module.exports = {
           100: '#EAEAEB',
           200: '#D6D5D7',
           300: '#ADABAF',
-          400: '#838288',
-          500: '#666360',
-          600: '#312E38',
+          400: '#999591', // Gray
+          500: '#666360', // Gray Hard
+          600: '#312E38', // Background
           700: '#27252D',
           800: '#1D1C22',
-          900: '#141216',
+          900: '#28262E', // Black Medium
           1000: '#0A090B',
         },
         orange: {
@@ -47,7 +48,7 @@ module.exports = {
           600: '#F4EDE8',
           700: '#C3BEBA',
           800: '#928E8B',
-          900: '#625F5D',
+          900: '#3E3B47', // Shape
           1000: '#312F2E',
         },
       },
