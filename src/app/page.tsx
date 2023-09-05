@@ -1,4 +1,4 @@
-import { Form } from '@/components/Form'
+import { MainForm } from '@/components/MainForm'
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
         Calcule quanto tempo do expediente diário já foi realizado
       </h3>
 
-      <Form />
+      <MainForm />
     </main>
   )
 }

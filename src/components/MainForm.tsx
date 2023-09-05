@@ -12,7 +12,7 @@ import { ProgressLine } from './ProgressLine'
 
 const VALUES_LS_KEY = '@QuantoFalta:values'
 
-export const Form: React.FC = () => {
+export const MainForm: React.FC = () => {
   const [minutesLeft, setMinutesLeft] = useState(480)
 
   const formConfig = useForm<CalcInputsTypes>({
@@ -98,7 +98,7 @@ export const Form: React.FC = () => {
           Calcular
         </button>
 
-        <button type="reset" onClick={handleReset}>
+        <button className="hover:underline" type="reset" onClick={handleReset}>
           limpar formulário
         </button>
 
