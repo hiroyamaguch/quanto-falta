@@ -5,8 +5,8 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { Input } from './Input'
-import { calcValidator, CalcInputsTypes } from '@/validators/calc.validator'
-import { parseStringToDate } from '@/helpers/parseHours'
+import { calcValidator, CalcInputsTypes } from '@/validators/calculate'
+import { parseStringToDate } from '@/utils/parseHours'
 import { add, differenceInMinutes, format } from 'date-fns'
 import { ProgressLine } from './ProgressLine'
 
