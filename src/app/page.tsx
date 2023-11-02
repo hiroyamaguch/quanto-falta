@@ -7,9 +7,9 @@ export default function Home() {
         Quanto falta?
       </h1>
 
-      <h3 className="text-center font-sans">
+      <p className="text-center font-sans">
         Calcule quanto tempo do expediente diário já foi realizado
-      </h3>
+      </p>
 
       <MainForm />
     </main>
