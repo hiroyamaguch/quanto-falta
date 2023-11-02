@@ -11,17 +11,9 @@ import { useFormContext } from 'react-hook-form'
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string
   label?: string
-  mask?: string
-  containerStyle?: Record<string, unknown>
 }
 
-export const Input: React.FC<InputProps> = ({
-  name,
-  label,
-  mask,
-  containerStyle = {},
-  ...rest
-}) => {
+export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
   const [hasFocus, setHasFocus] = useState(false)
 
   const {
