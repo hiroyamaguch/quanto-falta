@@ -1,11 +1,6 @@
 'use client'
 
-import React, {
-  InputHTMLAttributes,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react'
+import React, { InputHTMLAttributes, useCallback, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -18,7 +13,7 @@ export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
 
   const {
     register,
-    formState: { errors },
+    formState: { errors }
   } = useFormContext()
 
   const errorMessage: string | undefined = errors?.[name]?.message?.toString()
@@ -41,9 +36,7 @@ export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
         <div className="flex-col items-center justify-start">
           <p>{label}</p>
 
-          {hasError && (
-            <p className="pt-1 text-sm text-red-600">{errorMessage}</p>
-          )}
+          {hasError && <p className="pt-1 text-sm text-red-600">{errorMessage}</p>}
         </div>
       )}
       <input

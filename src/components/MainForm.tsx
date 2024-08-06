@@ -1,13 +1,13 @@
 'use client'
 
+import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 
-import { Input } from './Input'
-import { calcValidator, CalcInputsTypes } from '@/validators/calculate'
 import { parseStringToDate } from '@/utils/parseHours'
+import { CalcInputsTypes, calcValidator } from '@/validators/calculate'
 import { add, differenceInMinutes, format } from 'date-fns'
+import { Input } from './Input'
 import { ProgressLine } from './ProgressLine'
 
 const VALUES_LS_KEY = '@QuantoFalta:values'
@@ -17,7 +17,7 @@ export const MainForm: React.FC = () => {
 
   const formConfig = useForm<CalcInputsTypes>({
     mode: 'onChange',
-    resolver: yupResolver(calcValidator),
+    resolver: yupResolver(calcValidator)
   })
 
   const { handleSubmit, reset, setValue } = formConfig
@@ -111,10 +111,7 @@ export const MainForm: React.FC = () => {
               : `Foi realizado ${minutesLeft * -1} minutos de horas extras`}
           </li>
           {percentage < 100 && (
-            <li>
-              Previsão de saída:{' '}
-              {format(add(new Date(), { minutes: minutesLeft }), 'HH:mm')}
-            </li>
+            <li>Previsão de saída: {format(add(new Date(), { minutes: minutesLeft }), 'HH:mm')}</li>
           )}
         </ul>
       </form>

@@ -6,10 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "linter": "bunx @biomejs/biome check --write ./src",
+    "linter:check": "bunx @biomejs/biome check ./src"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.4",
+    "@hookform/resolvers": "^3.9.0",
     "@types/node": "20.12.2",
     "@types/react": "18.2.74",
     "@types/react-dom": "18.2.23",
@@ -19,15 +20,12 @@
     "postcss": "8.4.38",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.51.2",
+    "react-hook-form": "^7.52.2",
     "tailwindcss": "3.4.3",
     "typescript": "5.4.3",
     "yup": "^1.4.0"
-  },
+  },  
   "devDependencies": {
-    "@rocketseat/eslint-config": "^2.2.2",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^14.1.4",
-    "prettier-plugin-tailwindcss": "^0.5.13"
+    "@biomejs/biome": "^1.8.3"
   }
 }
