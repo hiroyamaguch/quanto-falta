@@ -1,11 +1,12 @@
-import { Roboto_Slab as RobotoSlab } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 import React from 'react'
 
 import './globals.css'
 
-const robotoSlab = RobotoSlab({
+const nunito = Nunito({
   subsets: ['latin'],
-  variable: '--font-roboto-slab'
+  display: 'swap',
+  variable: '--font-nunito'
 })
 
 export const metadata = {
@@ -20,9 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className={`${robotoSlab.className} bg-gray-600 font-sans text-white-600`}>
-        {children}
-      </body>
+      <body className={`${nunito.variable} bg-gray-600 font-sans text-white-600`}>{children}</body>
     </html>
   )
 }
