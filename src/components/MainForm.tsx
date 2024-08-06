@@ -77,6 +77,11 @@ export const MainForm: React.FC = () => {
   }
 
   useEffect(() => {
+    const workDayTimeOnLS = Number(localStorage?.getItem(VALUES_WDT_KEY) ?? 480)
+
+    setMinutesLeft(workDayTimeOnLS)
+    setWorkDayTime(workDayTimeOnLS)
+
     const data = localStorage.getItem(VALUES_LS_KEY)
 
     if (data) {
@@ -90,13 +95,6 @@ export const MainForm: React.FC = () => {
       onSubmit(dataParsed)
     }
   }, [setValue])
-
-  useEffect(() => {
-    const workDayTimeOnLS = Number(localStorage?.getItem(VALUES_WDT_KEY) ?? 480)
-
-    setMinutesLeft(workDayTimeOnLS)
-    setWorkDayTime(workDayTimeOnLS)
-  }, [])
 
   return (
     <FormProvider {...formConfig}>
