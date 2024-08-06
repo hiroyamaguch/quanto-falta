@@ -1,7 +1,7 @@
 'use client'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 
 import { parseStringToDate } from '@/utils/parseHours'
@@ -11,9 +11,15 @@ import { Input } from './Input'
 import { ProgressLine } from './ProgressLine'
 
 const VALUES_LS_KEY = '@QuantoFalta:values'
+const VALUES_WDT_KEY = '@QuantoFalta:tempo-diario-de-trabalho'
 
 export const MainForm: React.FC = () => {
-  const [minutesLeft, setMinutesLeft] = useState(480)
+  const [minutesLeft, setMinutesLeft] = useState<number>(
+    Number(localStorage.getItem(VALUES_WDT_KEY)) ?? 480
+  )
+  const [workDayTime, setWorkDayTime] = useState<number>(
+    Number(localStorage.getItem(VALUES_WDT_KEY)) ?? 480
+  )
 
   const formConfig = useForm<CalcInputsTypes>({
     mode: 'onChange',
@@ -23,17 +29,28 @@ export const MainForm: React.FC = () => {
   const { handleSubmit, reset, setValue } = formConfig
 
   const percentage = useMemo(() => {
-    const percentageLeft = (minutesLeft / 480) * 100
+    const percentageLeft = (minutesLeft / workDayTime) * 100
     const percentage = 100 - Math.round(percentageLeft)
 
     return percentage
   }, [minutesLeft])
 
   const handleReset = useCallback(() => {
-    setMinutesLeft(480)
+    setMinutesLeft(workDayTime)
     localStorage.removeItem(VALUES_LS_KEY)
     reset()
   }, [reset])
+
+  const handleChangeWorkDayTime = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target
+
+      localStorage.setItem(VALUES_WDT_KEY, value)
+
+      setWorkDayTime(Number(value))
+    },
+    [reset]
+  )
 
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
@@ -59,7 +76,7 @@ export const MainForm: React.FC = () => {
       totalHoursWorked += differenceInMinutes(parsedFourth, parsedThird)
     }
 
-    setMinutesLeft(480 - totalHoursWorked)
+    setMinutesLeft(workDayTime - totalHoursWorked)
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
 
@@ -84,6 +101,16 @@ export const MainForm: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full max-w-[300px] flex-col items-center space-y-6"
       >
+        <div className="flex w-full flex-col space-y-3 ">
+          <Input
+            name="work-day-time"
+            label="Meta diária de trabalho em minutos"
+            type="number"
+            value={workDayTime}
+            onChange={handleChangeWorkDayTime}
+          />
+        </div>
+
         <div className="flex w-full flex-col space-y-3 ">
           <Input name="first" label="Primeira entrada" type="time" />
           <Input name="second" label="Saída para o almoço" type="time" />
