@@ -14,12 +14,8 @@ const VALUES_LS_KEY = '@QuantoFalta:values'
 const VALUES_WDT_KEY = '@QuantoFalta:tempo-diario-de-trabalho'
 
 export const MainForm: React.FC = () => {
-  const [minutesLeft, setMinutesLeft] = useState<number>(
-    Number(localStorage.getItem(VALUES_WDT_KEY)) ?? 480
-  )
-  const [workDayTime, setWorkDayTime] = useState<number>(
-    Number(localStorage.getItem(VALUES_WDT_KEY)) ?? 480
-  )
+  const [minutesLeft, setMinutesLeft] = useState<number>(480)
+  const [workDayTime, setWorkDayTime] = useState<number>(480)
 
   const formConfig = useForm<CalcInputsTypes>({
     mode: 'onChange',
@@ -94,6 +90,13 @@ export const MainForm: React.FC = () => {
       onSubmit(dataParsed)
     }
   }, [setValue])
+
+  useEffect(() => {
+    const workDayTimeOnLS = Number(localStorage?.getItem(VALUES_WDT_KEY) ?? 480)
+
+    setMinutesLeft(workDayTimeOnLS)
+    setWorkDayTime(workDayTimeOnLS)
+  }, [])
 
   return (
     <FormProvider {...formConfig}>
