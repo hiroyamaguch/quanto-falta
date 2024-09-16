@@ -29,24 +29,21 @@ export const MainForm: React.FC = () => {
     const percentage = 100 - Math.round(percentageLeft)
 
     return percentage
-  }, [minutesLeft])
+  }, [minutesLeft, workDayTime])
 
   const handleReset = useCallback(() => {
     setMinutesLeft(workDayTime)
     localStorage.removeItem(VALUES_LS_KEY)
     reset()
-  }, [reset])
+  }, [reset, workDayTime])
 
-  const handleChangeWorkDayTime = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.target
+  const handleChangeWorkDayTime = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
 
-      localStorage.setItem(VALUES_WDT_KEY, value)
+    localStorage.setItem(VALUES_WDT_KEY, value)
 
-      setWorkDayTime(Number(value))
-    },
-    [reset]
-  )
+    setWorkDayTime(Number(value))
+  }, [])
 
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
@@ -76,6 +73,7 @@ export const MainForm: React.FC = () => {
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const workDayTimeOnLS = Number(localStorage?.getItem(VALUES_WDT_KEY) ?? 480)
 
