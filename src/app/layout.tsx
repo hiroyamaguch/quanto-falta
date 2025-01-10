@@ -1,6 +1,8 @@
 import { Nunito } from 'next/font/google'
 import React from 'react'
 
+import { Analytics } from '@vercel/analytics/react'
+
 import './globals.css'
 
 const nunito = Nunito({
@@ -21,7 +23,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className={`${nunito.variable} bg-gray-600 font-sans text-white-600`}>{children}</body>
+      <body className={`${nunito.variable} bg-gray-600 font-sans text-white-600`}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
