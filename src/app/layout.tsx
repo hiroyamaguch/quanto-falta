@@ -2,6 +2,7 @@ import { Nunito } from 'next/font/google'
 import React from 'react'
 
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import './globals.css'
 
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body className={`${nunito.variable} bg-gray-600 font-sans text-white-600`}>
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
