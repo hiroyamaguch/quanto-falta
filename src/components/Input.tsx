@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
       <input
         id={label}
         type="text"
-        className={`h-[48px] max-w-[150px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-none ${borderFocusColor}`}
+        className={`h-[48px] max-w-[150px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-hidden ${borderFocusColor}`}
         autoComplete="off"
         onFocus={handleFocus}
         {...register(name, { onBlur: handleBlur })}

@@ -1,6 +1,61 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-nunito);
+
+  --color-input-600: #232129;
+
+  --color-gray-100: #eaeaeb;
+  --color-gray-200: #d6d5d7;
+  --color-gray-300: #adabaf;
+  --color-gray-400: #999591;
+  --color-gray-500: #666360;
+  --color-gray-600: #312e38;
+  --color-gray-700: #27252d;
+  --color-gray-800: #1d1c22;
+  --color-gray-900: #28262e;
+  --color-gray-1000: #0a090b;
+
+  --color-orange-100: #fff4e6;
+  --color-orange-200: #ffe9cc;
+  --color-orange-300: #ffd399;
+  --color-orange-400: #ffbc66;
+  --color-orange-500: #ffa633;
+  --color-orange-600: #ff9000;
+  --color-orange-700: #cc7300;
+  --color-orange-800: #995600;
+  --color-orange-900: #663a00;
+  --color-orange-1000: #331d00;
+
+  --color-white-100: #fefdfd;
+  --color-white-200: #fdfbfa;
+  --color-white-300: #fbf8f6;
+  --color-white-400: #f8f4f1;
+  --color-white-500: #f6f1ed;
+  --color-white-600: #f4ede8;
+  --color-white-700: #c3beba;
+  --color-white-800: #928e8b;
+  --color-white-900: #3e3b47;
+  --color-white-1000: #312f2e;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 body {
   -webkit-font-smoothing: antialiased;
