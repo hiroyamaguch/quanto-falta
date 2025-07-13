@@ -1,6 +1,7 @@
 'use client'
 
-import React, { InputHTMLAttributes, useCallback, useMemo, useState } from 'react'
+import type React from 'react'
+import { type InputHTMLAttributes, useCallback, useMemo, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {

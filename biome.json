@@ -1,7 +1,11 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "javascript": {
     "formatter": {
@@ -28,9 +32,7 @@
         "noStaticOnlyClass": "off"
       },
       "correctness": {
-        "noUnusedImports": {
-          "level": "warn"
-        }
+        "noUnusedImports": "warn"
       },
       "style": {
         "useImportType": "off"
@@ -38,6 +40,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules/*", ".env", ".env.*", "bun.lockb"]
+    "includes": ["src/**"]
   }
 }

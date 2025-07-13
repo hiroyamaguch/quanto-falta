@@ -1,12 +1,12 @@
 'use client'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-
-import { parseStringToDate } from '@/utils/parseHours'
-import { CalcInputsTypes, calcValidator } from '@/validators/calculate'
-import { add, differenceInMinutes, format } from 'date-fns'
+import { add, format } from 'date-fns'
+import type React from 'react'
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
+import { calcDiferenceInMinutes } from '@/utils/parseHours'
+import { type CalcInputsTypes, calcValidator } from '@/validators/calculate'
 import { Input } from './Input'
 import { ProgressLine } from './ProgressLine'
 
@@ -17,7 +17,7 @@ export const MainForm: React.FC = () => {
   const [minutesLeft, setMinutesLeft] = useState<number>(480)
   const [workDayTime, setWorkDayTime] = useState<number>(480)
 
-  const formConfig = useForm<CalcInputsTypes>({
+  const formConfig = useForm({
     mode: 'onChange',
     resolver: yupResolver(calcValidator)
   })
@@ -48,32 +48,15 @@ export const MainForm: React.FC = () => {
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
 
-    const parsedFirst = parseStringToDate(data.first)
-
-    if (!data.second) {
-      totalHoursWorked += differenceInMinutes(new Date(), parsedFirst)
-    } else {
-      const parsedSecond = parseStringToDate(data.second)
-
-      totalHoursWorked += differenceInMinutes(parsedSecond, parsedFirst)
-    }
-
-    if (data.third && !data.fourth) {
-      const parsedThird = parseStringToDate(data.third)
-
-      totalHoursWorked += differenceInMinutes(new Date(), parsedThird)
-    } else if (data.third && data.fourth) {
-      const parsedThird = parseStringToDate(data.third)
-      const parsedFourth = parseStringToDate(data.fourth)
-
-      totalHoursWorked += differenceInMinutes(parsedFourth, parsedThird)
-    }
+    totalHoursWorked += calcDiferenceInMinutes(data.first, data.second)
+    totalHoursWorked += calcDiferenceInMinutes(data.third, data.fourth)
 
     setMinutesLeft(workDayTime - totalHoursWorked)
+
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: "This effect runs only once on mount."
   useEffect(() => {
     const workDayTimeOnLS = Number(localStorage?.getItem(VALUES_WDT_KEY) ?? 480)
 
