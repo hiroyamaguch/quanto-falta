@@ -12,7 +12,7 @@ const nunito = Nunito({
 })
 
 export const metadata = {
-  title: 'Cálculo de horas',
+  title: 'Quanto falta?',
   description: 'Calcule quantas horas faltam para sair do serviço'
 }
 

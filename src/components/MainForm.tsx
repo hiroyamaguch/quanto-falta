@@ -81,9 +81,9 @@ export const MainForm: React.FC = () => {
     <FormProvider {...formConfig}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full max-w-[300px] flex-col items-center space-y-6"
+        className="flex w-full max-w-[340px] flex-col items-center space-y-2"
       >
-        <div className="flex w-full flex-col space-y-3 ">
+        <div className="flex w-full flex-col space-y-3 bg-gray-700 rounded-md px-4 py-2">
           <Input
             name="work-day-time"
             label="Meta diária de trabalho em minutos"
@@ -93,23 +93,29 @@ export const MainForm: React.FC = () => {
           />
         </div>
 
-        <div className="flex w-full flex-col space-y-3 ">
+        <div className="flex w-full flex-col space-y-3 bg-gray-700 rounded-md px-4 py-2">
           <Input name="first" label="Primeira entrada" type="time" />
           <Input name="second" label="Saída para o almoço" type="time" />
           <Input name="third" label="Volta do almoço" type="time" />
           <Input name="fourth" label="Final do expediente" type="time" />
         </div>
 
-        <button
-          type="submit"
-          className="h-[50px] w-full rounded-md bg-orange-600 px-4 py-2 text-gray-600  transition-all delay-75 hover:bg-orange-500"
-        >
-          Calcular
-        </button>
+        <div className="flex w-full space-x-2">
+          <button
+            type="submit"
+            className="h-[50px] w-full rounded-md bg-orange-600 px-4 py-2 text-gray-600 cursor-pointer transition-all delay-75 hover:bg-orange-500"
+          >
+            Calcular
+          </button>
 
-        <button className="hover:underline" type="reset" onClick={handleReset}>
-          limpar formulário
-        </button>
+          <button
+            className="bg-red-600 px-4 py-2 rounded-md cursor-pointer transition-all delay-75 hover:bg-red-500"
+            type="reset"
+            onClick={handleReset}
+          >
+            limpar
+          </button>
+        </div>
 
         <ProgressLine percentage={percentage} />
 
