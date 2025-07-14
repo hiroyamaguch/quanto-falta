@@ -81,9 +81,9 @@ export const MainForm: React.FC = () => {
     <FormProvider {...formConfig}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full max-w-[340px] flex-col items-center space-y-2"
+        className="flex w-full max-w-[340px] flex-col items-center space-y-4"
       >
-        <div className="flex w-full flex-col space-y-3 bg-gray-700 rounded-md px-4 py-2">
+        <div className="flex w-full flex-col space-y-3 bg-gray-400 rounded-md px-4 py-2">
           <Input
             name="work-day-time"
             label="Meta diária de trabalho em minutos"
@@ -93,7 +93,7 @@ export const MainForm: React.FC = () => {
           />
         </div>
 
-        <div className="flex w-full flex-col space-y-3 bg-gray-700 rounded-md px-4 py-2">
+        <div className="flex w-full flex-col space-y-3 bg-gray-400 rounded-md px-4 py-2">
           <Input name="first" label="Primeira entrada" type="time" />
           <Input name="second" label="Saída para o almoço" type="time" />
           <Input name="third" label="Volta do almoço" type="time" />

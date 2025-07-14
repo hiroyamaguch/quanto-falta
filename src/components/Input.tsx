@@ -35,7 +35,7 @@ export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
     <label className="flex w-full items-center justify-between space-x-4">
       {label && (
         <div className="flex-col items-center justify-start">
-          <p>{label}</p>
+          <p className="text-black">{label}</p>
 
           {hasError && <p className="pt-1 text-sm text-red-600">{errorMessage}</p>}
         </div>
@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
       <input
         id={label}
         type="text"
-        className={`h-[48px] max-w-[150px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-hidden ${borderFocusColor}`}
+        className={`h-[48px] max-w-[120px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-hidden ${borderFocusColor}`}
         autoComplete="off"
         onFocus={handleFocus}
         {...register(name, { onBlur: handleBlur })}
