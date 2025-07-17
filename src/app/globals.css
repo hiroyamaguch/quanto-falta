@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 @plugin "daisyui";
 
+@theme {
+  --breakpoint-vsm: 25rem;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;

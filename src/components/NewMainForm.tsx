@@ -129,7 +129,7 @@ export const NewMainForm: React.FC = () => {
           {...register('fourth')}
         />
 
-        <div className="flex items-end space-x-2 pb-1 not-md:pt-2">
+        <div className="flex items-end space-x-2 pb-1 max-md:pt-8 max-md:pb-4">
           <button type="submit" className="h-[36px] btn btn-primary">
             Calcular
           </button>
@@ -140,7 +140,7 @@ export const NewMainForm: React.FC = () => {
         </div>
       </form>
 
-      <div className="stats shadow not-md:stats-vertical">
+      <div className="stats shadow max-vsm:stats-vertical">
         <div className="stat">
           <div className="stat-figure text-primary">
             <Clock />
