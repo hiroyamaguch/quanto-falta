@@ -48,8 +48,8 @@ export const MainForm: React.FC = () => {
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
 
-    totalHoursWorked += calcDiferenceInMinutes(data.first, data.second)
-    totalHoursWorked += calcDiferenceInMinutes(data.third, data.fourth)
+    totalHoursWorked += calcDiferenceInMinutes(data.first, data?.second ?? '')
+    totalHoursWorked += calcDiferenceInMinutes(data?.third ?? '', data?.fourth ?? '')
 
     setMinutesLeft(workDayTime - totalHoursWorked)
 
@@ -81,7 +81,7 @@ export const MainForm: React.FC = () => {
     <FormProvider {...formConfig}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full max-w-[340px] flex-col items-center space-y-4"
+        className="flex max-w-[340px] flex-col items-center space-y-4"
       >
         <div className="flex w-full flex-col space-y-3 bg-gray-400 rounded-md px-4 py-2">
           <Input

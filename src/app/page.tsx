@@ -1,13 +1,17 @@
-import { MainForm } from '@/components/MainForm'
+import { Footer } from '@/components/Footer'
+import { Navbar } from '@/components/Navbar'
+import { NewMainForm } from '@/components/NewMainForm'
 
 export default function Home() {
   return (
-    <main className="flex h-screen flex-col items-center justify-center space-y-4 px-5">
-      <h1 className="text-center font-sans text-2xl font-bold">Quanto falta?</h1>
+    <main className="flex flex-col pt-[64px] pb-[40px]">
+      <Navbar />
 
-      <p className="text-center font-sans">Calcule quantas horas faltam para sair do serviço</p>
+      <div className="flex flex-col space-y-4 items-center max-w-[1320px] w-full m-auto px-4 py-4">
+        <NewMainForm />
+      </div>
 
-      <MainForm />
+      <Footer />
     </main>
   )
 }
