@@ -5,7 +5,7 @@ import { add, format } from 'date-fns'
 import { AlarmClockCheck, CalendarClock, Clock } from 'lucide-react'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
+import { type SubmitHandler, useForm } from 'react-hook-form'
 import { calcDiferenceInMinutes } from '@/utils/parseHours'
 import { type CalcInputsTypes, calcValidator } from '@/validators/calculate'
 import { NewInput } from './NewInput'
@@ -17,18 +17,16 @@ export const NewMainForm: React.FC = () => {
   const [minutesLeft, setMinutesLeft] = useState<number>(480)
   const [workDayTime, setWorkDayTime] = useState<number>(480)
 
-  const formConfig = useForm({
-    mode: 'all',
-    resolver: yupResolver(calcValidator)
-  })
-
   const {
     handleSubmit,
     reset,
     setValue,
     register,
     formState: { errors }
-  } = formConfig
+  } = useForm({
+    mode: 'all',
+    resolver: yupResolver(calcValidator)
+  })
 
   const percentage = useMemo(() => {
     const percentageLeft = (minutesLeft / workDayTime) * 100
@@ -84,8 +82,9 @@ export const NewMainForm: React.FC = () => {
   }, [setValue])
 
   return (
-    <FormProvider {...formConfig}>
+    <div className="flex flex-col space-y-6 items-center max-w-[1320px] w-full justify-center m-auto px-4 py-4 pb-10">
       <form
+        id="calc-hours"
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full not-md:items-center md:justify-center space-x-2 not-md:flex-col"
       >
@@ -128,17 +127,17 @@ export const NewMainForm: React.FC = () => {
           error={errors?.fourth}
           {...register('fourth')}
         />
-
-        <div className="flex items-end space-x-2 pb-1 max-md:pt-8 max-md:pb-4">
-          <button type="submit" className="h-[36px] btn btn-primary">
-            Calcular
-          </button>
-
-          <button className="h-[36px] btn btn-secondary" type="reset" onClick={handleReset}>
-            Limpar
-          </button>
-        </div>
       </form>
+
+      <div className="flex items-end space-x-2">
+        <button type="submit" form="calc-hours" className="h-[36px] btn btn-primary">
+          Calcular
+        </button>
+
+        <button className="h-[36px] btn btn-secondary" type="reset" onClick={handleReset}>
+          Limpar
+        </button>
+      </div>
 
       <div className="stats shadow max-vsm:stats-vertical">
         <div className="stat">
@@ -173,6 +172,6 @@ export const NewMainForm: React.FC = () => {
           </div>
         </div>
       </div>
-    </FormProvider>
+    </div>
   )
 }

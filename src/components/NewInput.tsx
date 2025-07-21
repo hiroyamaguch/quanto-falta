@@ -11,12 +11,12 @@ interface NewInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const NewInput: FC<NewInputProps> = ({ label, className, icon: Icon, error, ...rest }) => {
   return (
-    <fieldset className={twMerge('fieldset', className)}>
+    <fieldset className={twMerge('fieldset not-md:w-[204px]', className)}>
       <legend className="fieldset-legend">{label}</legend>
 
       <label className="input">
         {Icon && <Icon />}
-        <input {...rest} />
+        <input {...rest} className="block" />
       </label>
     </fieldset>
   )
