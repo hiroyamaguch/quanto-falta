@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes'
 import React from 'react'
 
 import './globals.css'
+import { Metadata } from 'next'
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -12,9 +13,17 @@ const nunito = Nunito({
   variable: '--font-nunito'
 })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Quanto falta?',
-  description: 'Calcule quantas horas faltam para sair do serviço'
+  description: 'Calcule quantas horas faltam para sair do serviço',
+  openGraph: {
+    title: 'Quanto falta?',
+    description: 'Calcule quantas horas faltam para sair do serviço',
+    type: 'website',
+    url: 'https://quanto-falta.vercel.app/',
+    siteName: 'Quanto falta?',
+    images: [{ url: 'https://quanto-falta.vercel.app/logo.png' }]
+  }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

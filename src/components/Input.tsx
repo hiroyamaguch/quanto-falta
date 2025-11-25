@@ -32,7 +32,7 @@ export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
   const borderFocusColor = hasFocus ? 'border-orange-600' : 'border-transparent'
 
   return (
-    <label className="flex w-full items-center justify-between space-x-4">
+    <label className="flex w-full items-center justify-between space-x-4" htmlFor={label}>
       {label && (
         <div className="flex-col items-center justify-start">
           <p className="text-black">{label}</p>
@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
       <input
         id={label}
         type="text"
-        className={`h-[48px] max-w-[120px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-hidden ${borderFocusColor}`}
+        className={`h-12 max-w-[120px] rounded-lg border-2 bg-input-600 px-4 py-2 outline-hidden ${borderFocusColor}`}
         autoComplete="off"
         onFocus={handleFocus}
         {...register(name, { onBlur: handleBlur })}
