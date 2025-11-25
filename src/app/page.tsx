@@ -4,7 +4,7 @@ import { NewMainForm } from '@/components/NewMainForm'
 
 export default function Home() {
   return (
-    <main className="flex flex-col h-screen pt-[64px] pb-[40px]">
+    <main className="flex flex-col h-screen pt-16 pb-10">
       <Navbar />
 
       <NewMainForm />
