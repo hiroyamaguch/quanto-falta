@@ -2,27 +2,31 @@
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { add, format } from 'date-fns'
+import { AlarmClockCheck, CalendarClock, Clock } from 'lucide-react'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
+import { type SubmitHandler, useForm } from 'react-hook-form'
 import { calcDiferenceInMinutes } from '@/utils/parseHours'
 import { type CalcInputsTypes, calcValidator } from '@/validators/calculate'
 import { Input } from './Input'
-import { ProgressLine } from './ProgressLine'
 
-const VALUES_LS_KEY = '@QuantoFalta:values'
-const VALUES_WDT_KEY = '@QuantoFalta:tempo-diario-de-trabalho'
+const VALUES_LS_KEY = 'form-values'
+const VALUES_WDT_KEY = 'workday-time'
 
 export const MainForm: React.FC = () => {
   const [minutesLeft, setMinutesLeft] = useState<number>(480)
   const [workDayTime, setWorkDayTime] = useState<number>(480)
 
-  const formConfig = useForm({
-    mode: 'onChange',
+  const {
+    handleSubmit,
+    reset,
+    setValue,
+    register,
+    formState: { errors }
+  } = useForm({
+    mode: 'all',
     resolver: yupResolver(calcValidator)
   })
-
-  const { handleSubmit, reset, setValue } = formConfig
 
   const percentage = useMemo(() => {
     const percentageLeft = (minutesLeft / workDayTime) * 100
@@ -78,58 +82,76 @@ export const MainForm: React.FC = () => {
   }, [setValue])
 
   return (
-    <FormProvider {...formConfig}>
+    <div className="flex flex-col space-y-6 items-center max-w-[1320px] w-full justify-center m-auto px-4 py-4 pb-10">
       <form
+        id="calc-hours"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex max-w-[340px] flex-col items-center space-y-4"
+        className="flex w-full not-md:items-center md:justify-center space-x-2 not-md:flex-col"
       >
-        <div className="flex w-full flex-col space-y-3 bg-gray-400 rounded-md px-4 py-2">
-          <Input
-            name="work-day-time"
-            label="Meta diária de trabalho em minutos"
-            type="number"
-            value={workDayTime}
-            onChange={handleChangeWorkDayTime}
-          />
-        </div>
+        <Input
+          className="max-w-[204px]"
+          label="Workday time (in min)"
+          type="number"
+          placeholder="480"
+          required
+          icon={AlarmClockCheck}
+          value={workDayTime}
+          error={errors?.['work-day-time']}
+          {...register('work-day-time', { onChange: handleChangeWorkDayTime })}
+        />
 
-        <div className="flex w-full flex-col space-y-3 bg-gray-400 rounded-md px-4 py-2">
-          <Input name="first" label="Primeira entrada" type="time" />
-          <Input name="second" label="Saída para o almoço" type="time" />
-          <Input name="third" label="Volta do almoço" type="time" />
-          <Input name="fourth" label="Final do expediente" type="time" />
-        </div>
+        <Input label="First Check-in" type="time" error={errors?.first} {...register('first')} />
 
-        <div className="flex w-full space-x-2">
-          <button
-            type="submit"
-            className="h-[50px] w-full rounded-md bg-orange-600 px-4 py-2 text-gray-600 cursor-pointer transition-all delay-75 hover:bg-orange-500"
-          >
-            Calcular
-          </button>
+        <Input label="Dinner Checkout" type="time" error={errors?.second} {...register('second')} />
 
-          <button
-            className="bg-red-600 px-4 py-2 rounded-md cursor-pointer transition-all delay-75 hover:bg-red-500"
-            type="reset"
-            onClick={handleReset}
-          >
-            limpar
-          </button>
-        </div>
+        <Input label="Second Check-in" type="time" error={errors?.third} {...register('third')} />
 
-        <ProgressLine percentage={percentage} />
-
-        <ul className="text-center">
-          <li>
-            {percentage < 100
-              ? `Faltam ${minutesLeft} minutos`
-              : `Foi realizado ${minutesLeft * -1} minutos de horas extras`}
-          </li>
-          {percentage < 100 && (
-            <li>Previsão de saída: {format(add(new Date(), { minutes: minutesLeft }), 'HH:mm')}</li>
-          )}
-        </ul>
+        <Input label="Work day end" type="time" error={errors?.fourth} {...register('fourth')} />
       </form>
-    </FormProvider>
+
+      <div className="flex items-end space-x-2">
+        <button type="submit" form="calc-hours" className="h-9 btn btn-primary">
+          Calculate
+        </button>
+
+        <button className="h-9 btn btn-secondary" type="reset" onClick={handleReset}>
+          Clean
+        </button>
+      </div>
+
+      <div className="stats shadow max-vsm:stats-vertical">
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <Clock />
+          </div>
+          <div className="stat-title">{percentage < 100 ? 'Left' : 'Time Worked'}</div>
+          <div className="stat-value text-primary">
+            {percentage < 100 ? minutesLeft : minutesLeft * -1 + workDayTime} min
+          </div>
+          <div className="stat-desc">
+            {percentage < 100
+              ? `of the ${workDayTime} min goal`
+              : `${minutesLeft * -1} min of overtime`}
+          </div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-figure text-secondary">
+            <CalendarClock />
+          </div>
+          <div className="stat-title">
+            {percentage < 100 ? 'Estimated end of work' : 'Work Done :)'}
+          </div>
+          <div className="stat-value text-secondary">
+            {percentage < 100
+              ? format(add(new Date(), { minutes: minutesLeft }), 'HH:mm')
+              : '--:--'}
+          </div>
+          <div className="stat-desc">
+            {percentage < 100 ? `${percentage}% concluded` : 'Good Work!'}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
