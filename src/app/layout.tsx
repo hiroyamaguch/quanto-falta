@@ -14,14 +14,14 @@ const nunito = Nunito({
 })
 
 export const metadata: Metadata = {
-  title: 'Quanto falta?',
-  description: 'Calcule quantas horas faltam para sair do serviço',
+  title: 'Work Timer',
+  description: 'A simple countdown to track how much time you have left at work',
   openGraph: {
-    title: 'Quanto falta?',
-    description: 'Calcule quantas horas faltam para sair do serviço',
+    title: 'Work Timer',
+    description: 'A simple countdown to track how much time you have left at work',
     type: 'website',
     url: 'https://quanto-falta.vercel.app/',
-    siteName: 'Quanto falta?',
+    siteName: 'Work Timer',
     images: [{ url: 'https://quanto-falta.vercel.app/logo.png' }]
   }
 }
