@@ -16,23 +16,49 @@ export const Footer: FC = () => {
         </div>
       </div>
 
-      <a className="link" target="_blank" rel="noopener" href="https://hiroyamaguch.vercel.app/">
+      <a
+        className="link"
+        target="_blank"
+        aria-label="Hiroyuki Yamaguchi Portfolio"
+        rel="noopener"
+        href="https://hiroyamaguch.vercel.app/"
+      >
         <p>Hiroyuki Yamaguchi</p>
       </a>
 
-      <a href="https://github.com/hiroyamaguch" target="_blank" rel="noopener noreferrer">
+      <a
+        href="https://github.com/hiroyamaguch"
+        target="_blank"
+        aria-label="Hiroyuki Yamaguchi Github"
+        rel="noopener noreferrer"
+      >
         <Github />
       </a>
 
-      <a href="https://instagram.com/hiroyamaguch/" target="_blank" rel="noopener noreferrer">
+      <a
+        href="https://instagram.com/hiroyamaguch/"
+        target="_blank"
+        aria-label="Hiroyuki Yamaguchi Instagram"
+        rel="noopener noreferrer"
+      >
         <Instagram />
       </a>
 
-      <a href="https://linkedin.com/in/hiroyamaguch/" target="_blank" rel="noopener noreferrer">
+      <a
+        href="https://linkedin.com/in/hiroyamaguch/"
+        target="_blank"
+        aria-label="Hiroyuki Yamaguchi LinkedIn"
+        rel="noopener noreferrer"
+      >
         <Linkedin />
       </a>
 
-      <a href="mailto:hiroyamaguch@proton.me" target="_blank" rel="noopener noreferrer">
+      <a
+        href="mailto:hiroyamaguch@proton.me"
+        target="_blank"
+        aria-label="Hiroyuki Yamaguchi Email"
+        rel="noopener noreferrer"
+      >
         <Mail />
       </a>
     </footer>
