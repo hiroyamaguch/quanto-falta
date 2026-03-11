@@ -6,9 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "check": "biome check",
-    "linter": "bunx @biomejs/biome check --write ./src",
-    "linter:check": "bunx @biomejs/biome check ./src"
+    "lint": "biome lint ./src",
+    "format": "biome format --write ./src",
+    "check": "biome check --write ./src"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
