@@ -91,6 +91,7 @@ export const MainForm: React.FC = () => {
         id="calc-hours"
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full not-md:items-center md:justify-center space-x-2 not-md:flex-col"
+        suppressHydrationWarning
       >
         <Input
           className="max-w-51"
@@ -114,7 +115,12 @@ export const MainForm: React.FC = () => {
       </form>
 
       <div className="flex items-end space-x-2">
-        <button type="submit" form="calc-hours" className="h-9 btn btn-primary">
+        <button
+          type="submit"
+          form="calc-hours"
+          className="h-9 btn btn-primary"
+          suppressHydrationWarning
+        >
           Calculate
         </button>
 
@@ -148,7 +154,9 @@ export const MainForm: React.FC = () => {
           </div>
           <div className="stat-value text-secondary">
             {percentage < 100
-              ? (now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : '--:--')
+              ? now
+                ? format(add(now, { minutes: minutesLeft }), 'HH:mm')
+                : '--:--'
               : '--:--'}
           </div>
           <div className="stat-desc">
