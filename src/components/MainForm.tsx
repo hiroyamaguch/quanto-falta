@@ -16,6 +16,7 @@ const VALUES_WDT_KEY = 'workday-time'
 export const MainForm: React.FC = () => {
   const [minutesLeft, setMinutesLeft] = useState<number>(480)
   const [workDayTime, setWorkDayTime] = useState<number>(480)
+  const [now, setNow] = useState<Date | null>(null)
 
   const {
     handleSubmit,
@@ -56,6 +57,7 @@ export const MainForm: React.FC = () => {
     totalHoursWorked += calcDiferenceInMinutes(data?.third ?? '', data?.fourth ?? '')
 
     setMinutesLeft(workDayTime - totalHoursWorked)
+    setNow(new Date())
 
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
@@ -78,18 +80,20 @@ export const MainForm: React.FC = () => {
       setValue('fourth', dataParsed.fourth)
 
       onSubmit(dataParsed)
+    } else {
+      setNow(new Date())
     }
   }, [setValue])
 
   return (
-    <div className="flex flex-col space-y-6 items-center max-w-[1320px] w-full justify-center m-auto px-4 py-4 pb-10">
+    <div className="flex flex-col space-y-6 items-center max-w-330 w-full justify-center m-auto px-4 py-4 pb-10">
       <form
         id="calc-hours"
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full not-md:items-center md:justify-center space-x-2 not-md:flex-col"
       >
         <Input
-          className="max-w-[204px]"
+          className="max-w-51"
           label="Workday time (in min)"
           type="number"
           placeholder="480"
@@ -144,7 +148,7 @@ export const MainForm: React.FC = () => {
           </div>
           <div className="stat-value text-secondary">
             {percentage < 100
-              ? format(add(new Date(), { minutes: minutesLeft }), 'HH:mm')
+              ? (now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : '--:--')
               : '--:--'}
           </div>
           <div className="stat-desc">
