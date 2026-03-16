@@ -17,6 +17,7 @@ export const ToggleThemeModeButton: FC = () => {
         checked={theme === 'light'}
         className="theme-controller toggle"
         onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        aria-label="Toggle theme"
       />
       <Sun size={20} className="hidden md:block" />
     </label>

@@ -16,7 +16,7 @@ export const Input: FC<InputProps> = ({ label, className, icon: Icon, error, ...
 
       <label className="input">
         {Icon && <Icon />}
-        <input {...rest} className="block" suppressHydrationWarning />
+        <input {...rest} className="block" aria-label={label} suppressHydrationWarning />
       </label>
     </fieldset>
   )
