@@ -1,3 +1,5 @@
+'use client'
+
 import { Github, Instagram, Linkedin, Mail } from 'lucide-react'
 import Image from 'next/image'
 import { FC } from 'react'
