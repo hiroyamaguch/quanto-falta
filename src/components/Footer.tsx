@@ -1,66 +1,71 @@
+'use client'
+
 import { Github, Instagram, Linkedin, Mail } from 'lucide-react'
 import Image from 'next/image'
 import { FC } from 'react'
 
 export const Footer: FC = () => {
   return (
-    <footer className="flex flex-1 space-x-4 bg-base-300 items-center justify-center px-4 py-2 w-full fixed bottom-0 inset-shadow-2xs">
-      <div className="avatar">
-        <div className="w-8 rounded-full">
-          <Image
-            src="https://avatars.githubusercontent.com/u/31856074?v=4"
-            alt="Hiroyuki Yamaguchi"
-            width={32}
-            height={32}
-          />
-        </div>
+    <footer
+      className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 px-6 h-12"
+      style={{
+        backgroundColor: 'var(--color-surface)',
+        borderTop: '1px solid var(--color-border)',
+      }}
+    >
+      <div
+        className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0"
+        style={{ border: '1px solid var(--color-border)' }}
+      >
+        <Image
+          src="https://avatars.githubusercontent.com/u/31856074?v=4"
+          alt="Hiroyuki Yamaguchi"
+          width={24}
+          height={24}
+        />
       </div>
 
       <a
-        className="link"
+        className="text-xs font-medium transition-colors"
+        style={{ color: 'var(--color-muted)' }}
         target="_blank"
         aria-label="Hiroyuki Yamaguchi Portfolio"
         rel="noopener"
         href="https://hiroyamaguch.vercel.app/"
+        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-foreground)')}
+        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
       >
-        <p>Hiroyuki Yamaguchi</p>
+        Hiroyuki Yamaguchi
       </a>
 
-      <a
-        href="https://github.com/hiroyamaguch"
-        target="_blank"
-        aria-label="Hiroyuki Yamaguchi Github"
-        rel="noopener noreferrer"
-      >
-        <Github />
-      </a>
+      <div
+        className="h-3 w-px"
+        style={{ backgroundColor: 'var(--color-border)' }}
+        aria-hidden="true"
+      />
 
-      <a
-        href="https://instagram.com/hiroyamaguch/"
-        target="_blank"
-        aria-label="Hiroyuki Yamaguchi Instagram"
-        rel="noopener noreferrer"
-      >
-        <Instagram />
-      </a>
-
-      <a
-        href="https://linkedin.com/in/hiroyamaguch/"
-        target="_blank"
-        aria-label="Hiroyuki Yamaguchi LinkedIn"
-        rel="noopener noreferrer"
-      >
-        <Linkedin />
-      </a>
-
-      <a
-        href="mailto:hiroyamaguch@proton.me"
-        target="_blank"
-        aria-label="Hiroyuki Yamaguchi Email"
-        rel="noopener noreferrer"
-      >
-        <Mail />
-      </a>
+      <div className="flex items-center gap-3">
+        {[
+          { href: 'https://github.com/hiroyamaguch', Icon: Github, label: 'GitHub' },
+          { href: 'https://instagram.com/hiroyamaguch/', Icon: Instagram, label: 'Instagram' },
+          { href: 'https://linkedin.com/in/hiroyamaguch/', Icon: Linkedin, label: 'LinkedIn' },
+          { href: 'mailto:hiroyamaguch@proton.me', Icon: Mail, label: 'Email' },
+        ].map(({ href, Icon, label }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Hiroyuki Yamaguchi ${label}`}
+            className="transition-colors"
+            style={{ color: 'var(--color-muted)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-foreground)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+          >
+            <Icon size={15} />
+          </a>
+        ))}
+      </div>
     </footer>
   )
 }
