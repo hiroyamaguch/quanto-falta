@@ -57,7 +57,7 @@ export const Input: FC<InputProps> = ({ label, className, icon: Icon, error, id,
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={error ? errorId : undefined}
           suppressHydrationWarning
-          className="flex-1 bg-transparent text-sm outline-none w-full min-w-0"
+          className="flex-1 bg-transparent text-sm outline-none focus:outline-none focus-visible:outline-none w-full min-w-0"
           style={{ color: 'var(--color-foreground)' }}
         />
       </div>
