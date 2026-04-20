@@ -141,9 +141,7 @@ export const MainForm: React.FC = () => {
             >
               {percentage}%
             </span>
-            <span className="text-xs mt-1" style={{ color: 'var(--color-muted)' }}>
-              done
-            </span>
+
           </div>
         </div>
 
