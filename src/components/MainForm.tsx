@@ -101,6 +101,16 @@ export const MainForm: React.FC = () => {
     >
       {/* Stats card */}
       <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        aria-label={
+          isDone
+            ? isOvertime
+              ? `Work done. ${Math.abs(minutesLeft)} minutes of overtime.`
+              : 'Work done. Good work!'
+            : `${percentage}% done. ${minutesLeft} minutes left of ${workDayTime} minute goal.${estimatedEnd ? ` Estimated end: ${estimatedEnd}.` : ''}`
+        }
         className="w-full rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6"
         style={{
           backgroundColor: 'var(--color-surface)',
@@ -269,10 +279,13 @@ export const MainForm: React.FC = () => {
           <button
             type="submit"
             form="calc-hours"
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all"
+            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               backgroundColor: 'var(--color-accent)',
               color: '#ffffff',
+              // @ts-expect-error CSS custom property
+              '--tw-ring-color': 'var(--color-accent)',
+              '--tw-ring-offset-color': 'var(--color-background)',
             }}
             onMouseEnter={e =>
               ((e.currentTarget as HTMLButtonElement).style.backgroundColor =
@@ -284,18 +297,21 @@ export const MainForm: React.FC = () => {
             }
             suppressHydrationWarning
           >
-            <Zap size={14} />
+            <Zap size={14} aria-hidden="true" />
             Calculate
           </button>
 
           <button
             type="reset"
             onClick={handleReset}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all"
+            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               backgroundColor: 'var(--color-surface-raised)',
               color: 'var(--color-muted)',
               border: '1px solid var(--color-border)',
+              // @ts-expect-error CSS custom property
+              '--tw-ring-color': 'var(--color-muted)',
+              '--tw-ring-offset-color': 'var(--color-background)',
             }}
             onMouseEnter={e => {
               const btn = e.currentTarget as HTMLButtonElement
@@ -308,7 +324,7 @@ export const MainForm: React.FC = () => {
               btn.style.borderColor = 'var(--color-border)'
             }}
           >
-            <RotateCcw size={14} />
+            <RotateCcw size={14} aria-hidden="true" />
             Reset
           </button>
         </div>

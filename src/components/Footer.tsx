@@ -30,7 +30,7 @@ export const Footer: FC = () => {
         style={{ color: 'var(--color-muted)' }}
         target="_blank"
         aria-label="Hiroyuki Yamaguchi Portfolio"
-        rel="noopener"
+        rel="noopener noreferrer"
         href="https://hiroyamaguch.vercel.app/"
         onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-foreground)')}
         onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
