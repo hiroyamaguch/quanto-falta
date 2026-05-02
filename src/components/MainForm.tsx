@@ -282,7 +282,7 @@ export const MainForm: React.FC = () => {
             className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               backgroundColor: 'var(--color-accent)',
-              color: '#ffffff',
+              color: 'var(--color-accent-foreground)',
               // @ts-expect-error CSS custom property
               '--tw-ring-color': 'var(--color-accent)',
               '--tw-ring-offset-color': 'var(--color-background)',
