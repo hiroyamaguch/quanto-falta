@@ -1,8 +1,8 @@
 'use client'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { add, format } from 'date-fns'
-import { AlarmClockCheck, RotateCcw, Zap } from 'lucide-react'
+import { add, differenceInMinutes, format } from 'date-fns'
+import { AlarmClockCheck, Clock, RotateCcw, Zap } from 'lucide-react'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -12,6 +12,7 @@ import { Input } from './Input'
 
 const VALUES_LS_KEY = 'form-values'
 const VALUES_WDT_KEY = 'workday-time'
+const REALTIME_KEY = 'realtime-mode'
 
 const RADIUS = 52
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
@@ -20,6 +21,9 @@ export const MainForm: React.FC = () => {
   const [minutesLeft, setMinutesLeft] = useState<number>(480)
   const [workDayTime, setWorkDayTime] = useState<number>(480)
   const [now, setNow] = useState<Date | null>(null)
+  const [realtimeMode, setRealtimeMode] = useState<boolean>(false)
+  const [lastCalculatedAt, setLastCalculatedAt] = useState<Date | null>(null)
+  const [baseMinutesLeft, setBaseMinutesLeft] = useState<number>(480)
 
   const {
     handleSubmit,
@@ -56,16 +60,30 @@ export const MainForm: React.FC = () => {
     let totalHoursWorked = 0
     totalHoursWorked += calcDiferenceInMinutes(data.first, data?.second ?? '')
     totalHoursWorked += calcDiferenceInMinutes(data?.third ?? '', data?.fourth ?? '')
-    setMinutesLeft(workDayTime - totalHoursWorked)
+    const calculatedMinutes = workDayTime - totalHoursWorked
+    setMinutesLeft(calculatedMinutes)
+    setBaseMinutesLeft(calculatedMinutes)
+    setLastCalculatedAt(new Date())
     setNow(new Date())
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
+
+  const toggleRealtimeMode = useCallback(() => {
+    setRealtimeMode(prev => {
+      const newValue = !prev
+      localStorage.setItem(REALTIME_KEY, String(newValue))
+      return newValue
+    })
+  }, [])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: "This effect runs only once on mount."
   useEffect(() => {
     const workDayTimeOnLS = Number(localStorage?.getItem(VALUES_WDT_KEY) ?? 480)
     setMinutesLeft(workDayTimeOnLS)
     setWorkDayTime(workDayTimeOnLS)
+
+    const realtimeOnLS = localStorage?.getItem(REALTIME_KEY) === 'true'
+    setRealtimeMode(realtimeOnLS)
 
     const data = localStorage.getItem(VALUES_LS_KEY)
     if (data) {
@@ -79,6 +97,22 @@ export const MainForm: React.FC = () => {
       setNow(new Date())
     }
   }, [setValue])
+
+  // Real-time mode: update minutes left every minute
+  useEffect(() => {
+    if (!realtimeMode || !lastCalculatedAt) return
+
+    const updateMinutes = () => {
+      const elapsed = differenceInMinutes(new Date(), lastCalculatedAt)
+      setMinutesLeft(baseMinutesLeft - elapsed)
+      setNow(new Date())
+    }
+
+    updateMinutes() // Update immediately when enabled
+    const interval = setInterval(updateMinutes, 60000) // Update every minute
+
+    return () => clearInterval(interval)
+  }, [realtimeMode, lastCalculatedAt, baseMinutesLeft])
 
   const strokeDashoffset = CIRCUMFERENCE - (percentage / 100) * CIRCUMFERENCE
   const ringColor = isDone
@@ -326,6 +360,25 @@ export const MainForm: React.FC = () => {
           >
             <RotateCcw size={14} aria-hidden="true" />
             Reset
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleRealtimeMode}
+            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ml-auto"
+            style={{
+              backgroundColor: realtimeMode ? 'var(--color-success-muted)' : 'var(--color-surface-raised)',
+              color: realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
+              border: `1px solid ${realtimeMode ? 'var(--color-success)' : 'var(--color-border)'}`,
+              // @ts-expect-error CSS custom property
+              '--tw-ring-color': realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
+              '--tw-ring-offset-color': 'var(--color-background)',
+            }}
+            aria-pressed={realtimeMode}
+            title={realtimeMode ? 'Disable real-time updates' : 'Enable real-time updates'}
+          >
+            <Clock size={14} aria-hidden="true" />
+            {realtimeMode ? 'Real-time ON' : 'Real-time'}
           </button>
         </div>
       </div>
