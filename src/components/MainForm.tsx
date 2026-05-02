@@ -87,10 +87,6 @@ export const MainForm: React.FC = () => {
       ? 'var(--color-accent)'
       : 'var(--color-accent)'
 
-  const displayMinutes = isDone
-    ? Math.abs(minutesLeft) + (isOvertime ? workDayTime - workDayTime : 0)
-    : minutesLeft
-
   const estimatedEnd =
     !isDone && now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : null
 
@@ -163,7 +159,8 @@ export const MainForm: React.FC = () => {
                 Work Done
               </span>
               <span className="text-4xl font-bold" style={{ color: 'var(--color-success)' }}>
-                Good work! 🎉
+                Good work!{' '}
+                <span aria-hidden="true">🎉</span>
               </span>
               {isOvertime && (
                 <span className="text-sm" style={{ color: 'var(--color-muted)' }}>
@@ -229,6 +226,7 @@ export const MainForm: React.FC = () => {
       >
         <form
           id="calc-hours"
+          aria-label="Calculate work hours"
           onSubmit={handleSubmit(onSubmit)}
           suppressHydrationWarning
           className="flex flex-col gap-5"
