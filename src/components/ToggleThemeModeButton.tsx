@@ -1,11 +1,16 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { LuMoon, LuSun } from 'react-icons/lu'
 
 export const ToggleThemeModeButton: FC = () => {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <label htmlFor="theme-toggle" className="flex cursor-pointer items-center gap-2">
@@ -14,10 +19,11 @@ export const ToggleThemeModeButton: FC = () => {
         id="theme-toggle"
         type="checkbox"
         value="synthwave"
-        checked={theme === 'light'}
+        checked={mounted ? theme === 'light' : false}
         className="theme-controller toggle"
         onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-label={mounted && theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        suppressHydrationWarning
       />
       <LuSun size={20} aria-hidden="true" className="hidden md:block" />
     </label>
