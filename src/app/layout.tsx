@@ -5,6 +5,7 @@ import { Nunito } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
 
+import { SentryToolbar } from '@/components/SentryToolbar'
 import './globals.css'
 import { Metadata } from 'next'
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
         {shouldInjectToolbar && <VercelToolbar />}
+        <SentryToolbar />
       </body>
     </html>
   )
