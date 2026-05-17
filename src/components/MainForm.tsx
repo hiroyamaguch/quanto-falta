@@ -68,13 +68,14 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     }
   }, [])
 
-  const fireWorkDoneNotification = useCallback(() => {
-    if (!('Notification' in window)) return
-    if (Notification.permission !== 'granted') return
-    new Notification('Quanto Falta? ✅', {
-      body: 'Meta de trabalho atingida! Bom trabalho! 🎉',
+  const fireWorkDoneNotification = useCallback((): boolean => {
+    if (!('Notification' in window)) return false
+    if (Notification.permission !== 'granted') return false
+    new Notification('Quanto Falta?', {
+      body: 'Meta de trabalho atingida! Bom trabalho!',
       icon: '/favicon.ico',
     })
+    return true
   }, [])
 
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
@@ -129,8 +130,10 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   // Fire browser notification when work goal is reached
   useEffect(() => {
     if (minutesLeft <= 0 && !notificationFired && lastCalculatedAt !== null) {
-      fireWorkDoneNotification()
-      setNotificationFired(true)
+      const wasFired = fireWorkDoneNotification()
+      if (wasFired) {
+        setNotificationFired(true)
+      }
     }
   }, [minutesLeft, notificationFired, lastCalculatedAt, fireWorkDoneNotification])
 
