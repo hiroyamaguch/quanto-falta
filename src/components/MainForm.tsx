@@ -88,8 +88,13 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     setNow(new Date())
     setNotificationFired(false) // reset so a new notification can fire for the new submission
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
-    requestNotificationPermission()
   }
+
+  // Wrapper for form submission that also requests notification permission (user gesture only)
+  const handleFormSubmit = handleSubmit((data) => {
+    onSubmit(data)
+    requestNotificationPermission()
+  })
 
   const toggleRealtimeMode = useCallback(() => {
     setRealtimeMode((prev) => {
@@ -291,7 +296,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
       >
         <form
           id="calc-hours"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleFormSubmit}
           suppressHydrationWarning
           className="flex flex-col gap-5"
         >
