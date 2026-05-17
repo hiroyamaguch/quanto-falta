@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run check 2>&1 | tail -3",
+            "timeout": 60,
+            "statusMessage": "Rodando biome check..."
+          }
+        ]
+      }
+    ]
+  }
+}
