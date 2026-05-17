@@ -30,10 +30,10 @@ export const MainForm: React.FC = () => {
     reset,
     setValue,
     register,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     mode: 'all',
-    resolver: yupResolver(calcValidator),
+    resolver: yupResolver(calcValidator)
   })
 
   const percentage = useMemo(() => {
@@ -69,7 +69,7 @@ export const MainForm: React.FC = () => {
   }
 
   const toggleRealtimeMode = useCallback(() => {
-    setRealtimeMode(prev => {
+    setRealtimeMode((prev) => {
       const newValue = !prev
       localStorage.setItem(REALTIME_KEY, String(newValue))
       return newValue
@@ -121,8 +121,7 @@ export const MainForm: React.FC = () => {
       ? 'var(--color-brand)'
       : 'var(--color-brand)'
 
-  const estimatedEnd =
-    !isDone && now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : null
+  const estimatedEnd = !isDone && now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : null
 
   return (
     <div
@@ -144,11 +143,11 @@ export const MainForm: React.FC = () => {
         className="w-full rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6"
         style={{
           backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
+          border: '1px solid var(--color-border)'
         }}
       >
         {/* Circular progress */}
-        <div className="relative flex-shrink-0 flex items-center justify-center" aria-hidden="true">
+        <div className="relative shrink-0 flex items-center justify-center" aria-hidden="true">
           <svg width="128" height="128" viewBox="0 0 128 128" aria-hidden="true" focusable="false">
             {/* Track */}
             <circle
@@ -181,7 +180,6 @@ export const MainForm: React.FC = () => {
             >
               {percentage}%
             </span>
-
           </div>
         </div>
 
@@ -189,7 +187,10 @@ export const MainForm: React.FC = () => {
         <div className="flex-1 flex flex-col gap-4 w-full">
           {isDone ? (
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-success)' }}>
+              <span
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{ color: 'var(--color-success)' }}
+              >
                 Work Done
               </span>
               <span className="text-4xl font-bold" style={{ color: 'var(--color-success)' }}>
@@ -229,7 +230,7 @@ export const MainForm: React.FC = () => {
               className="flex items-center gap-2 rounded-lg px-3 py-2 w-fit"
               style={{
                 backgroundColor: 'var(--color-brand-muted)',
-                border: '1px solid rgba(59,130,246,0.2)',
+                border: '1px solid rgba(59,130,246,0.2)'
               }}
             >
               <span
@@ -254,7 +255,7 @@ export const MainForm: React.FC = () => {
         className="w-full rounded-xl p-6"
         style={{
           backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
+          border: '1px solid var(--color-border)'
         }}
       >
         <form
@@ -315,15 +316,14 @@ export const MainForm: React.FC = () => {
               color: 'var(--color-brand-foreground)',
               // @ts-expect-error CSS custom property
               '--tw-ring-color': 'var(--color-brand)',
-              '--tw-ring-offset-color': 'var(--color-background)',
+              '--tw-ring-offset-color': 'var(--color-background)'
             }}
-            onMouseEnter={e =>
+            onMouseEnter={(e) =>
               ((e.currentTarget as HTMLButtonElement).style.backgroundColor =
                 'var(--color-brand-hover)')
             }
-            onMouseLeave={e =>
-              ((e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                'var(--color-brand)')
+            onMouseLeave={(e) =>
+              ((e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--color-brand)')
             }
             suppressHydrationWarning
           >
@@ -341,14 +341,14 @@ export const MainForm: React.FC = () => {
               border: '1px solid var(--color-border)',
               // @ts-expect-error CSS custom property
               '--tw-ring-color': 'var(--color-muted)',
-              '--tw-ring-offset-color': 'var(--color-background)',
+              '--tw-ring-offset-color': 'var(--color-background)'
             }}
-            onMouseEnter={e => {
+            onMouseEnter={(e) => {
               const btn = e.currentTarget as HTMLButtonElement
               btn.style.color = 'var(--color-foreground)'
               btn.style.borderColor = 'var(--color-muted)'
             }}
-            onMouseLeave={e => {
+            onMouseLeave={(e) => {
               const btn = e.currentTarget as HTMLButtonElement
               btn.style.color = 'var(--color-muted)'
               btn.style.borderColor = 'var(--color-border)'
@@ -363,12 +363,14 @@ export const MainForm: React.FC = () => {
             onClick={toggleRealtimeMode}
             className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:ml-auto"
             style={{
-              backgroundColor: realtimeMode ? 'var(--color-success-muted)' : 'var(--color-surface-raised)',
+              backgroundColor: realtimeMode
+                ? 'var(--color-success-muted)'
+                : 'var(--color-surface-raised)',
               color: realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
               border: `1px solid ${realtimeMode ? 'var(--color-success)' : 'var(--color-border)'}`,
               // @ts-expect-error CSS custom property
               '--tw-ring-color': realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
-              '--tw-ring-offset-color': 'var(--color-background)',
+              '--tw-ring-offset-color': 'var(--color-background)'
             }}
             aria-pressed={realtimeMode}
             title={realtimeMode ? 'Disable real-time updates' : 'Enable real-time updates'}
