@@ -28,6 +28,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const [realtimeMode, setRealtimeMode] = useState<boolean>(false)
   const [lastCalculatedAt, setLastCalculatedAt] = useState<Date | null>(null)
   const [baseMinutesLeft, setBaseMinutesLeft] = useState<number>(480)
+  const [notificationFired, setNotificationFired] = useState<boolean>(false)
 
   const {
     handleSubmit,
@@ -60,6 +61,23 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     setWorkDayTime(Number(value))
   }, [])
 
+  const requestNotificationPermission = useCallback(async () => {
+    if (!('Notification' in window)) return
+    if (Notification.permission === 'default') {
+      await Notification.requestPermission()
+    }
+  }, [])
+
+  const fireWorkDoneNotification = useCallback((): boolean => {
+    if (!('Notification' in window)) return false
+    if (Notification.permission !== 'granted') return false
+    new Notification('Quanto Falta?', {
+      body: 'Meta de trabalho atingida! Bom trabalho!',
+      icon: '/favicon.ico',
+    })
+    return true
+  }, [])
+
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
     totalHoursWorked += calcDiferenceInMinutes(data.first, data?.second ?? '')
@@ -69,8 +87,15 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     setBaseMinutesLeft(calculatedMinutes)
     setLastCalculatedAt(new Date())
     setNow(new Date())
+    setNotificationFired(false) // reset so a new notification can fire for the new submission
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
+
+  // Wrapper for form submission that also requests notification permission (user gesture only)
+  const handleFormSubmit = handleSubmit((data) => {
+    onSubmit(data)
+    requestNotificationPermission()
+  })
 
   const toggleRealtimeMode = useCallback(() => {
     setRealtimeMode((prev) => {
@@ -101,6 +126,16 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
       setNow(new Date())
     }
   }, [setValue])
+
+  // Fire browser notification when work goal is reached
+  useEffect(() => {
+    if (minutesLeft <= 0 && !notificationFired && lastCalculatedAt !== null) {
+      const wasFired = fireWorkDoneNotification()
+      if (wasFired) {
+        setNotificationFired(true)
+      }
+    }
+  }, [minutesLeft, notificationFired, lastCalculatedAt, fireWorkDoneNotification])
 
   // Real-time mode: update minutes left every minute (only when feature flag is enabled)
   useEffect(() => {
@@ -264,7 +299,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
       >
         <form
           id="calc-hours"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleFormSubmit}
           suppressHydrationWarning
           className="flex flex-col gap-5"
         >
