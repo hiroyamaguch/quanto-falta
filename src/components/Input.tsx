@@ -44,7 +44,12 @@ export const Input: FC<InputProps> = ({ label, className, icon: Icon, error, id,
       </div>
 
       {error && (
-        <span id={errorId} role="alert" className="text-xs" style={{ color: 'var(--color-warning)' }}>
+        <span
+          id={errorId}
+          role="alert"
+          className="text-xs"
+          style={{ color: 'var(--color-warning)' }}
+        >
           {error.message}
         </span>
       )}
