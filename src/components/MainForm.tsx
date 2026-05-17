@@ -28,6 +28,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const [realtimeMode, setRealtimeMode] = useState<boolean>(false)
   const [lastCalculatedAt, setLastCalculatedAt] = useState<Date | null>(null)
   const [baseMinutesLeft, setBaseMinutesLeft] = useState<number>(480)
+  const [notificationFired, setNotificationFired] = useState<boolean>(false)
 
   const {
     handleSubmit,
@@ -60,6 +61,22 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     setWorkDayTime(Number(value))
   }, [])
 
+  const requestNotificationPermission = useCallback(async () => {
+    if (!('Notification' in window)) return
+    if (Notification.permission === 'default') {
+      await Notification.requestPermission()
+    }
+  }, [])
+
+  const fireWorkDoneNotification = useCallback(() => {
+    if (!('Notification' in window)) return
+    if (Notification.permission !== 'granted') return
+    new Notification('Quanto Falta? ✅', {
+      body: 'Meta de trabalho atingida! Bom trabalho! 🎉',
+      icon: '/favicon.ico',
+    })
+  }, [])
+
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
     totalHoursWorked += calcDiferenceInMinutes(data.first, data?.second ?? '')
@@ -69,7 +86,9 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     setBaseMinutesLeft(calculatedMinutes)
     setLastCalculatedAt(new Date())
     setNow(new Date())
+    setNotificationFired(false) // reset so a new notification can fire for the new submission
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
+    requestNotificationPermission()
   }
 
   const toggleRealtimeMode = useCallback(() => {
@@ -101,6 +120,14 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
       setNow(new Date())
     }
   }, [setValue])
+
+  // Fire browser notification when work goal is reached
+  useEffect(() => {
+    if (minutesLeft <= 0 && !notificationFired && lastCalculatedAt !== null) {
+      fireWorkDoneNotification()
+      setNotificationFired(true)
+    }
+  }, [minutesLeft, notificationFired, lastCalculatedAt, fireWorkDoneNotification])
 
   // Real-time mode: update minutes left every minute (only when feature flag is enabled)
   useEffect(() => {
