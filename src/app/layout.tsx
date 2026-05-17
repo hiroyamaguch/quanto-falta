@@ -1,5 +1,6 @@
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { VercelToolbar } from '@vercel/toolbar/next'
 import { Nunito } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
@@ -27,6 +28,8 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const shouldInjectToolbar = process.env.NODE_ENV === 'development'
+
   return (
     <html lang="pt-BR" suppressHydrationWarning style={{ backgroundColor: '#0a0a0a' }}>
       <body className={`${nunito.variable} font-sans`} suppressHydrationWarning>
@@ -37,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
+        {shouldInjectToolbar && <VercelToolbar />}
       </body>
     </html>
   )

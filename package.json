@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "@vercel/toolbar": "^0.2.6",
     "date-fns": "^4.1.0",
     "flags": "^4.0.6",
     "next": "^16.2.6",
