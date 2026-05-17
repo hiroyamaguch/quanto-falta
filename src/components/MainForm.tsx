@@ -118,12 +118,8 @@ export const MainForm: React.FC = () => {
   const ringColor = isDone
     ? 'var(--color-success)'
     : percentage > 75
-      ? 'var(--color-accent)'
-      : 'var(--color-accent)'
-
-  const displayMinutes = isDone
-    ? Math.abs(minutesLeft) + (isOvertime ? workDayTime - workDayTime : 0)
-    : minutesLeft
+      ? 'var(--color-brand)'
+      : 'var(--color-brand)'
 
   const estimatedEnd =
     !isDone && now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : null
@@ -153,7 +149,7 @@ export const MainForm: React.FC = () => {
       >
         {/* Circular progress */}
         <div className="relative flex-shrink-0 flex items-center justify-center" aria-hidden="true">
-          <svg width="128" height="128" viewBox="0 0 128 128">
+          <svg width="128" height="128" viewBox="0 0 128 128" aria-hidden="true" focusable="false">
             {/* Track */}
             <circle
               cx="64"
@@ -232,19 +228,19 @@ export const MainForm: React.FC = () => {
             <div
               className="flex items-center gap-2 rounded-lg px-3 py-2 w-fit"
               style={{
-                backgroundColor: 'var(--color-accent-muted)',
+                backgroundColor: 'var(--color-brand-muted)',
                 border: '1px solid rgba(59,130,246,0.2)',
               }}
             >
               <span
                 className="text-xs font-semibold uppercase tracking-widest"
-                style={{ color: 'var(--color-accent)' }}
+                style={{ color: 'var(--color-brand-text)' }}
               >
                 Est. end
               </span>
               <span
                 className="text-lg font-bold tabular-nums"
-                style={{ color: 'var(--color-accent)' }}
+                style={{ color: 'var(--color-brand-text)' }}
               >
                 {estimatedEnd}
               </span>
@@ -315,19 +311,19 @@ export const MainForm: React.FC = () => {
             form="calc-hours"
             className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
-              backgroundColor: 'var(--color-accent)',
-              color: 'var(--color-accent-foreground)',
+              backgroundColor: 'var(--color-brand)',
+              color: 'var(--color-brand-foreground)',
               // @ts-expect-error CSS custom property
-              '--tw-ring-color': 'var(--color-accent)',
+              '--tw-ring-color': 'var(--color-brand)',
               '--tw-ring-offset-color': 'var(--color-background)',
             }}
             onMouseEnter={e =>
               ((e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                'var(--color-accent-hover)')
+                'var(--color-brand-hover)')
             }
             onMouseLeave={e =>
               ((e.currentTarget as HTMLButtonElement).style.backgroundColor =
-                'var(--color-accent)')
+                'var(--color-brand)')
             }
             suppressHydrationWarning
           >

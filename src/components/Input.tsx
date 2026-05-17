@@ -32,8 +32,8 @@ export const Input: FC<InputProps> = ({ label, className, icon: Icon, error, id,
         }}
         onFocus={e => {
           const el = e.currentTarget as HTMLDivElement
-          el.style.borderColor = 'var(--color-accent)'
-          el.style.boxShadow = '0 0 0 3px var(--color-accent-muted)'
+          el.style.borderColor = 'var(--color-brand)'
+          el.style.boxShadow = '0 0 0 3px var(--color-brand-muted)'
         }}
         onBlur={e => {
           // only reset if focus moves outside this container
