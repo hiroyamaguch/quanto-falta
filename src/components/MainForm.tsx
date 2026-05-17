@@ -351,7 +351,9 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
                   {fields.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => remove(index)}
+                      onClick={() => {
+                        remove(index)
+                      }}
                       aria-label={`Remove period ${index + 1}`}
                       className="flex items-center justify-center h-10 w-10 shrink-0 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 mb-0.5"
                       style={{
@@ -384,7 +386,9 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
           {/* Add period button */}
           <button
             type="button"
-            onClick={() => append({ checkIn: '', checkOut: '' })}
+            onClick={() => {
+              append({ checkIn: '', checkOut: '' })
+            }}
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               backgroundColor: 'var(--color-surface-raised)',
