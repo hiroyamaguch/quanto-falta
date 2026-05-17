@@ -1,8 +1,8 @@
 'use client'
 
-import { Github, Instagram, Linkedin, Mail } from 'lucide-react'
 import Image from 'next/image'
 import { FC } from 'react'
+import { LuGithub, LuInstagram, LuLinkedin, LuMail } from 'react-icons/lu'
 
 export const Footer: FC = () => {
   return (
@@ -10,11 +10,11 @@ export const Footer: FC = () => {
       className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 px-6 h-12"
       style={{
         backgroundColor: 'var(--color-surface)',
-        borderTop: '1px solid var(--color-border)',
+        borderTop: '1px solid var(--color-border)'
       }}
     >
       <div
-        className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0"
+        className="w-6 h-6 rounded-full overflow-hidden shrink-0"
         style={{ border: '1px solid var(--color-border)' }}
       >
         <Image
@@ -32,8 +32,8 @@ export const Footer: FC = () => {
         aria-label="Hiroyuki Yamaguchi Portfolio"
         rel="noopener noreferrer"
         href="https://hiroyamaguch.vercel.app/"
-        onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-foreground)')}
-        onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted)')}
       >
         Hiroyuki Yamaguchi
       </a>
@@ -46,10 +46,10 @@ export const Footer: FC = () => {
 
       <div className="flex items-center gap-3">
         {[
-          { href: 'https://github.com/hiroyamaguch', Icon: Github, label: 'GitHub' },
-          { href: 'https://instagram.com/hiroyamaguch/', Icon: Instagram, label: 'Instagram' },
-          { href: 'https://linkedin.com/in/hiroyamaguch/', Icon: Linkedin, label: 'LinkedIn' },
-          { href: 'mailto:hiroyamaguch@proton.me', Icon: Mail, label: 'Email' },
+          { href: 'https://github.com/hiroyamaguch', Icon: LuGithub, label: 'GitHub' },
+          { href: 'https://instagram.com/hiroyamaguch/', Icon: LuInstagram, label: 'Instagram' },
+          { href: 'https://linkedin.com/in/hiroyamaguch/', Icon: LuLinkedin, label: 'LinkedIn' },
+          { href: 'mailto:hiroyamaguch@proton.me', Icon: LuMail, label: 'Email' }
         ].map(({ href, Icon, label }) => (
           <a
             key={label}
@@ -59,8 +59,8 @@ export const Footer: FC = () => {
             aria-label={`Hiroyuki Yamaguchi ${label}`}
             className="transition-colors"
             style={{ color: 'var(--color-muted)' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-foreground)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-foreground)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted)')}
           >
             <Icon size={15} />
           </a>

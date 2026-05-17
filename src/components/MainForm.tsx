@@ -2,7 +2,7 @@
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { add, differenceInMinutes, format } from 'date-fns'
-import { AlarmClockCheck, Clock, RotateCcw, Zap } from 'lucide-react'
+import { LuAlarmClockCheck, LuClock, LuRotateCcw, LuZap } from 'react-icons/lu'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -270,7 +270,7 @@ export const MainForm: React.FC = () => {
             type="number"
             placeholder="480"
             required
-            icon={AlarmClockCheck}
+            icon={LuAlarmClockCheck}
             value={workDayTime}
             error={errors?.['work-day-time']}
             {...register('work-day-time', { onChange: handleChangeWorkDayTime })}
@@ -327,7 +327,7 @@ export const MainForm: React.FC = () => {
             }
             suppressHydrationWarning
           >
-            <Zap size={14} aria-hidden="true" />
+            <LuZap size={14} aria-hidden="true" />
             Calculate
           </button>
 
@@ -354,7 +354,7 @@ export const MainForm: React.FC = () => {
               btn.style.borderColor = 'var(--color-border)'
             }}
           >
-            <RotateCcw size={14} aria-hidden="true" />
+            <LuRotateCcw size={14} aria-hidden="true" />
             Reset
           </button>
 
@@ -375,7 +375,7 @@ export const MainForm: React.FC = () => {
             aria-pressed={realtimeMode}
             title={realtimeMode ? 'Disable real-time updates' : 'Enable real-time updates'}
           >
-            <Clock size={14} aria-hidden="true" />
+            <LuClock size={14} aria-hidden="true" />
             {realtimeMode ? 'Real-time ON' : 'Real-time'}
           </button>
         </div>
