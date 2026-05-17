@@ -2,20 +2,22 @@
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { add, differenceInMinutes, format } from 'date-fns'
-import { LuAlarmClockCheck, LuClock, LuRotateCcw, LuZap } from 'react-icons/lu'
+import { LuAlarmClockCheck, LuClock, LuPlus, LuRotateCcw, LuTrash2, LuZap } from 'react-icons/lu'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { type SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 import { calcDiferenceInMinutes } from '@/utils/parseHours'
 import { type CalcInputsTypes, calcValidator } from '@/validators/calculate'
 import { Input } from './Input'
 
-const VALUES_LS_KEY = 'form-values'
+const VALUES_LS_KEY = 'form-values-v2'
 const VALUES_WDT_KEY = 'workday-time'
 const REALTIME_KEY = 'realtime-mode'
 
 const RADIUS = 52
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+
+const DEFAULT_PERIODS = [{ checkIn: '', checkOut: '' }]
 
 interface MainFormProps {
   realtimeEnabled: boolean
@@ -35,10 +37,20 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     reset,
     setValue,
     register,
+    control,
     formState: { errors }
-  } = useForm({
+  } = useForm<CalcInputsTypes>({
     mode: 'all',
-    resolver: yupResolver(calcValidator)
+    resolver: yupResolver(calcValidator),
+    defaultValues: {
+      'work-day-time': 480,
+      periods: DEFAULT_PERIODS,
+    }
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'periods',
   })
 
   const percentage = useMemo(() => {
@@ -52,7 +64,10 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const handleReset = useCallback(() => {
     setMinutesLeft(workDayTime)
     localStorage.removeItem(VALUES_LS_KEY)
-    reset()
+    reset({
+      'work-day-time': workDayTime,
+      periods: DEFAULT_PERIODS,
+    })
   }, [reset, workDayTime])
 
   const handleChangeWorkDayTime = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -80,18 +95,18 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
 
   const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
     let totalHoursWorked = 0
-    totalHoursWorked += calcDiferenceInMinutes(data.first, data?.second ?? '')
-    totalHoursWorked += calcDiferenceInMinutes(data?.third ?? '', data?.fourth ?? '')
+    for (const period of data.periods) {
+      totalHoursWorked += calcDiferenceInMinutes(period.checkIn, period.checkOut ?? '')
+    }
     const calculatedMinutes = workDayTime - totalHoursWorked
     setMinutesLeft(calculatedMinutes)
     setBaseMinutesLeft(calculatedMinutes)
     setLastCalculatedAt(new Date())
     setNow(new Date())
-    setNotificationFired(false) // reset so a new notification can fire for the new submission
+    setNotificationFired(false)
     localStorage.setItem(VALUES_LS_KEY, JSON.stringify(data))
   }
 
-  // Wrapper for form submission that also requests notification permission (user gesture only)
   const handleFormSubmit = handleSubmit((data) => {
     onSubmit(data)
     requestNotificationPermission()
@@ -117,10 +132,8 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     const data = localStorage.getItem(VALUES_LS_KEY)
     if (data) {
       const dataParsed = JSON.parse(data) as CalcInputsTypes
-      setValue('first', dataParsed.first)
-      setValue('second', dataParsed.second)
-      setValue('third', dataParsed.third)
-      setValue('fourth', dataParsed.fourth)
+      setValue('work-day-time', dataParsed['work-day-time'])
+      setValue('periods', dataParsed.periods)
       onSubmit(dataParsed)
     } else {
       setNow(new Date())
@@ -147,8 +160,8 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
       setNow(new Date())
     }
 
-    updateMinutes() // Update immediately when enabled
-    const interval = setInterval(updateMinutes, 60000) // Update every minute
+    updateMinutes()
+    const interval = setInterval(updateMinutes, 60000)
 
     return () => clearInterval(interval)
   }, [realtimeMode, lastCalculatedAt, baseMinutesLeft])
@@ -156,9 +169,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const strokeDashoffset = CIRCUMFERENCE - (percentage / 100) * CIRCUMFERENCE
   const ringColor = isDone
     ? 'var(--color-success)'
-    : percentage > 75
-      ? 'var(--color-brand)'
-      : 'var(--color-brand)'
+    : 'var(--color-brand)'
 
   const estimatedEnd = !isDone && now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : null
 
@@ -188,7 +199,6 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
         {/* Circular progress */}
         <div className="relative shrink-0 flex items-center justify-center" aria-hidden="true">
           <svg width="128" height="128" viewBox="0 0 128 128" aria-hidden="true" focusable="false">
-            {/* Track */}
             <circle
               cx="64"
               cy="64"
@@ -197,7 +207,6 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
               stroke="var(--color-border)"
               strokeWidth="8"
             />
-            {/* Progress */}
             <circle
               cx="64"
               cy="64"
@@ -315,33 +324,92 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
             {...register('work-day-time', { onChange: handleChangeWorkDayTime })}
           />
 
-          {/* Time inputs in a 2-col or 4-col grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <Input
-              label="First Check-in"
-              type="time"
-              error={errors?.first}
-              {...register('first')}
-            />
-            <Input
-              label="Dinner Checkout"
-              type="time"
-              error={errors?.second}
-              {...register('second')}
-            />
-            <Input
-              label="Second Check-in"
-              type="time"
-              error={errors?.third}
-              {...register('third')}
-            />
-            <Input
-              label="Work Day End"
-              type="time"
-              error={errors?.fourth}
-              {...register('fourth')}
-            />
+          {/* Dynamic periods */}
+          <div className="flex flex-col gap-3">
+            {fields.map((field, index) => {
+              const periodErrors = errors?.periods?.[index]
+              const isFirst = index === 0
+              const checkInLabel = isFirst ? 'Entrada' : `Entrada ${index + 1}`
+              const checkOutLabel = isFirst ? 'Saída' : `Saída ${index + 1}`
+
+              return (
+                <div key={field.id} className="flex items-end gap-2">
+                  <div className="grid grid-cols-2 gap-3 flex-1">
+                    <Input
+                      label={checkInLabel}
+                      type="time"
+                      error={periodErrors?.checkIn}
+                      {...register(`periods.${index}.checkIn`)}
+                    />
+                    <Input
+                      label={checkOutLabel}
+                      type="time"
+                      error={periodErrors?.checkOut}
+                      {...register(`periods.${index}.checkOut`)}
+                    />
+                  </div>
+
+                  {/* Remove button — only shown when there's more than one period */}
+                  {fields.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      aria-label={`Remover período ${index + 1}`}
+                      className="flex items-center justify-center h-10 w-10 shrink-0 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 mb-0.5"
+                      style={{
+                        backgroundColor: 'var(--color-surface-raised)',
+                        color: 'var(--color-muted)',
+                        border: '1px solid var(--color-border)',
+                        // @ts-expect-error CSS custom property
+                        '--tw-ring-color': 'var(--color-warning)',
+                        '--tw-ring-offset-color': 'var(--color-background)'
+                      }}
+                      onMouseEnter={(e) => {
+                        const btn = e.currentTarget as HTMLButtonElement
+                        btn.style.color = 'var(--color-warning)'
+                        btn.style.borderColor = 'var(--color-warning)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const btn = e.currentTarget as HTMLButtonElement
+                        btn.style.color = 'var(--color-muted)'
+                        btn.style.borderColor = 'var(--color-border)'
+                      }}
+                    >
+                      <LuTrash2 size={14} aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+              )
+            })}
           </div>
+
+          {/* Add period button */}
+          <button
+            type="button"
+            onClick={() => append({ checkIn: '', checkOut: '' })}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            style={{
+              backgroundColor: 'var(--color-surface-raised)',
+              color: 'var(--color-muted)',
+              border: '1px solid var(--color-border)',
+              // @ts-expect-error CSS custom property
+              '--tw-ring-color': 'var(--color-brand)',
+              '--tw-ring-offset-color': 'var(--color-background)'
+            }}
+            onMouseEnter={(e) => {
+              const btn = e.currentTarget as HTMLButtonElement
+              btn.style.color = 'var(--color-brand-text)'
+              btn.style.borderColor = 'var(--color-brand)'
+            }}
+            onMouseLeave={(e) => {
+              const btn = e.currentTarget as HTMLButtonElement
+              btn.style.color = 'var(--color-muted)'
+              btn.style.borderColor = 'var(--color-border)'
+            }}
+          >
+            <LuPlus size={14} aria-hidden="true" />
+            Adicionar período
+          </button>
         </form>
 
         {/* Actions */}
