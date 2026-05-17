@@ -9,7 +9,7 @@ export const Navbar: FC = () => {
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
       style={{
         backgroundColor: 'var(--color-surface)',
-        borderBottom: '1px solid var(--color-border)',
+        borderBottom: '1px solid var(--color-border)'
       }}
     >
       <div className="flex items-center gap-2.5">

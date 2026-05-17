@@ -2,10 +2,10 @@
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { add, differenceInMinutes, format } from 'date-fns'
-import { LuAlarmClockCheck, LuClock, LuPlus, LuRotateCcw, LuTrash2, LuZap } from 'react-icons/lu'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import { LuAlarmClockCheck, LuClock, LuPlus, LuRotateCcw, LuTrash2, LuZap } from 'react-icons/lu'
 import { calcDiferenceInMinutes } from '@/utils/parseHours'
 import { type CalcInputsTypes, calcValidator } from '@/validators/calculate'
 import { Input } from './Input'
@@ -44,13 +44,13 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     resolver: yupResolver(calcValidator),
     defaultValues: {
       'work-day-time': 480,
-      periods: DEFAULT_PERIODS,
+      periods: DEFAULT_PERIODS
     }
   })
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'periods',
+    name: 'periods'
   })
 
   const percentage = useMemo(() => {
@@ -66,7 +66,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     localStorage.removeItem(VALUES_LS_KEY)
     reset({
       'work-day-time': workDayTime,
-      periods: DEFAULT_PERIODS,
+      periods: DEFAULT_PERIODS
     })
   }, [reset, workDayTime])
 
@@ -88,7 +88,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     if (Notification.permission !== 'granted') return false
     new Notification('Work Timer', {
       body: 'Work goal reached! Good work!',
-      icon: '/favicon.ico',
+      icon: '/favicon.ico'
     })
     return true
   }, [])
@@ -164,12 +164,10 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     const interval = setInterval(updateMinutes, 60000)
 
     return () => clearInterval(interval)
-  }, [realtimeMode, lastCalculatedAt, baseMinutesLeft])
+  }, [realtimeMode, lastCalculatedAt, baseMinutesLeft, realtimeEnabled])
 
   const strokeDashoffset = CIRCUMFERENCE - (percentage / 100) * CIRCUMFERENCE
-  const ringColor = isDone
-    ? 'var(--color-success)'
-    : 'var(--color-brand)'
+  const ringColor = isDone ? 'var(--color-success)' : 'var(--color-brand)'
 
   const estimatedEnd = !isDone && now ? format(add(now, { minutes: minutesLeft }), 'HH:mm') : null
 

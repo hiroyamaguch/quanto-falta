@@ -7,7 +7,7 @@ export const realTimeUpdateFlag = flag<boolean>({
   description: 'Enables the real-time update button and auto-refresh logic in the main form.',
   options: [
     { value: false, label: 'Disabled' },
-    { value: true, label: 'Enabled' },
+    { value: true, label: 'Enabled' }
   ],
-  adapter: vercelAdapter(),
+  adapter: vercelAdapter()
 })

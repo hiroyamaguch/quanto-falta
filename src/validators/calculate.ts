@@ -24,7 +24,7 @@ export const calcValidator = yup.object().shape({
             const { checkIn } = this.parent as { checkIn?: string }
             if (!checkIn) return true
             return timeToMinutes(value) > timeToMinutes(checkIn)
-          }),
+          })
       })
     )
     .min(1)
@@ -35,7 +35,7 @@ export const calcValidator = yup.object().shape({
         if (!periods[i].checkOut) {
           return this.createError({
             path: `${this.path}.${i}.checkOut`,
-            message: 'Check-out is required',
+            message: 'Check-out is required'
           })
         }
       }
@@ -50,12 +50,12 @@ export const calcValidator = yup.object().shape({
         if (timeToMinutes(curr.checkIn) < timeToMinutes(prev.checkOut)) {
           return this.createError({
             path: `${this.path}.${i}.checkIn`,
-            message: 'Must be after previous check-out',
+            message: 'Must be after previous check-out'
           })
         }
       }
       return true
-    }),
+    })
 })
 
 export type PeriodType = {
