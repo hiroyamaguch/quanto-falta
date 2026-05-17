@@ -17,7 +17,11 @@ const REALTIME_KEY = 'realtime-mode'
 const RADIUS = 52
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-export const MainForm: React.FC = () => {
+interface MainFormProps {
+  realtimeEnabled: boolean
+}
+
+export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const [minutesLeft, setMinutesLeft] = useState<number>(480)
   const [workDayTime, setWorkDayTime] = useState<number>(480)
   const [now, setNow] = useState<Date | null>(null)
@@ -82,7 +86,7 @@ export const MainForm: React.FC = () => {
     setMinutesLeft(workDayTimeOnLS)
     setWorkDayTime(workDayTimeOnLS)
 
-    const realtimeOnLS = localStorage?.getItem(REALTIME_KEY) === 'true'
+    const realtimeOnLS = realtimeEnabled && localStorage?.getItem(REALTIME_KEY) === 'true'
     setRealtimeMode(realtimeOnLS)
 
     const data = localStorage.getItem(VALUES_LS_KEY)
@@ -98,9 +102,9 @@ export const MainForm: React.FC = () => {
     }
   }, [setValue])
 
-  // Real-time mode: update minutes left every minute
+  // Real-time mode: update minutes left every minute (only when feature flag is enabled)
   useEffect(() => {
-    if (!realtimeMode || !lastCalculatedAt) return
+    if (!realtimeEnabled || !realtimeMode || !lastCalculatedAt) return
 
     const updateMinutes = () => {
       const elapsed = differenceInMinutes(new Date(), lastCalculatedAt)
@@ -358,26 +362,28 @@ export const MainForm: React.FC = () => {
             Reset
           </button>
 
-          <button
-            type="button"
-            onClick={toggleRealtimeMode}
-            className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:ml-auto"
-            style={{
-              backgroundColor: realtimeMode
-                ? 'var(--color-success-muted)'
-                : 'var(--color-surface-raised)',
-              color: realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
-              border: `1px solid ${realtimeMode ? 'var(--color-success)' : 'var(--color-border)'}`,
-              // @ts-expect-error CSS custom property
-              '--tw-ring-color': realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
-              '--tw-ring-offset-color': 'var(--color-background)'
-            }}
-            aria-pressed={realtimeMode}
-            title={realtimeMode ? 'Disable real-time updates' : 'Enable real-time updates'}
-          >
-            <LuClock size={14} aria-hidden="true" />
-            {realtimeMode ? 'Real-time ON' : 'Real-time'}
-          </button>
+          {realtimeEnabled && (
+            <button
+              type="button"
+              onClick={toggleRealtimeMode}
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:ml-auto"
+              style={{
+                backgroundColor: realtimeMode
+                  ? 'var(--color-success-muted)'
+                  : 'var(--color-surface-raised)',
+                color: realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
+                border: `1px solid ${realtimeMode ? 'var(--color-success)' : 'var(--color-border)'}`,
+                // @ts-expect-error CSS custom property
+                '--tw-ring-color': realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
+                '--tw-ring-offset-color': 'var(--color-background)'
+              }}
+              aria-pressed={realtimeMode}
+              title={realtimeMode ? 'Disable real-time updates' : 'Enable real-time updates'}
+            >
+              <LuClock size={14} aria-hidden="true" />
+              {realtimeMode ? 'Real-time ON' : 'Real-time'}
+            </button>
+          )}
         </div>
       </div>
     </div>
