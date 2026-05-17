@@ -309,11 +309,11 @@ export const MainForm: React.FC = () => {
         </form>
 
         {/* Actions */}
-        <div className="flex items-center gap-3 mt-5">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-5">
           <button
             type="submit"
             form="calc-hours"
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               backgroundColor: 'var(--color-accent)',
               color: 'var(--color-accent-foreground)',
@@ -338,7 +338,7 @@ export const MainForm: React.FC = () => {
           <button
             type="reset"
             onClick={handleReset}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               backgroundColor: 'var(--color-surface-raised)',
               color: 'var(--color-muted)',
@@ -365,7 +365,7 @@ export const MainForm: React.FC = () => {
           <button
             type="button"
             onClick={toggleRealtimeMode}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ml-auto"
+            className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:ml-auto"
             style={{
               backgroundColor: realtimeMode ? 'var(--color-success-muted)' : 'var(--color-surface-raised)',
               color: realtimeMode ? 'var(--color-success)' : 'var(--color-muted)',
