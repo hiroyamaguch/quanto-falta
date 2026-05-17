@@ -86,8 +86,8 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const fireWorkDoneNotification = useCallback((): boolean => {
     if (!('Notification' in window)) return false
     if (Notification.permission !== 'granted') return false
-    new Notification('Quanto Falta?', {
-      body: 'Meta de trabalho atingida! Bom trabalho!',
+    new Notification('Work Timer', {
+      body: 'Work goal reached! Good work!',
       icon: '/favicon.ico',
     })
     return true
@@ -329,8 +329,8 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
             {fields.map((field, index) => {
               const periodErrors = errors?.periods?.[index]
               const isFirst = index === 0
-              const checkInLabel = isFirst ? 'Entrada' : `Entrada ${index + 1}`
-              const checkOutLabel = isFirst ? 'Saída' : `Saída ${index + 1}`
+              const checkInLabel = isFirst ? 'Check-in' : `Check-in ${index + 1}`
+              const checkOutLabel = isFirst ? 'Check-out' : `Check-out ${index + 1}`
 
               return (
                 <div key={field.id} className="flex items-end gap-2">
@@ -354,7 +354,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
                     <button
                       type="button"
                       onClick={() => remove(index)}
-                      aria-label={`Remover período ${index + 1}`}
+                      aria-label={`Remove period ${index + 1}`}
                       className="flex items-center justify-center h-10 w-10 shrink-0 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 mb-0.5"
                       style={{
                         backgroundColor: 'var(--color-surface-raised)',
@@ -408,7 +408,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
             }}
           >
             <LuPlus size={14} aria-hidden="true" />
-            Adicionar período
+            Add period
           </button>
         </form>
 
