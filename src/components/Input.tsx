@@ -24,26 +24,7 @@ export const Input: FC<InputProps> = ({ label, className, icon: Icon, error, id,
         {label}
       </label>
 
-      <div
-        className="flex items-center gap-2 px-3 h-10 rounded-lg transition-all focus-within:outline-none"
-        style={{
-          backgroundColor: 'var(--color-surface-raised)',
-          border: '1px solid var(--color-border)',
-        }}
-        onFocus={e => {
-          const el = e.currentTarget as HTMLDivElement
-          el.style.borderColor = 'var(--color-brand)'
-          el.style.boxShadow = '0 0 0 3px var(--color-brand-muted)'
-        }}
-        onBlur={e => {
-          // only reset if focus moves outside this container
-          if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-            const el = e.currentTarget as HTMLDivElement
-            el.style.borderColor = 'var(--color-border)'
-            el.style.boxShadow = 'none'
-          }
-        }}
-      >
+      <div className="input-wrapper flex items-center gap-2 px-3 h-10 rounded-lg">
         {Icon && (
           <Icon
             size={14}
