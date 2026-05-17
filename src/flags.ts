@@ -1,3 +1,4 @@
+import { vercelAdapter } from '@flags-sdk/vercel'
 import { flag } from 'flags/next'
 
 export const realTimeUpdateFlag = flag<boolean>({
@@ -8,7 +9,5 @@ export const realTimeUpdateFlag = flag<boolean>({
     { value: false, label: 'Disabled' },
     { value: true, label: 'Enabled' },
   ],
-  decide() {
-    return this.defaultValue as boolean
-  },
+  adapter: vercelAdapter(),
 })
