@@ -1,6 +1,6 @@
-import { verifyAccess } from '@vercel/flags'
-import { getProviderData, type KeyedFlagDefinitionType } from '@vercel/flags/next'
-import { NextResponse, type NextRequest } from 'next/server'
+import { verifyAccess } from 'flags'
+import { getProviderData, type KeyedFlagDefinitionType } from 'flags/next'
+import { type NextRequest, NextResponse } from 'next/server'
 import { realTimeUpdateFlag } from '@/flags'
 
 export async function GET(request: NextRequest) {

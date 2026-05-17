@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning style={{ backgroundColor: '#0a0a0a' }}>
-      <body className={`${nunito.variable} font-sans`}>
+      <body className={`${nunito.variable} font-sans`} suppressHydrationWarning>
         <ThemeProvider>
           <div className="flex flex-col min-h-screen pt-14 pb-12">
             {children}

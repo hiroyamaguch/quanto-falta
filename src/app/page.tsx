@@ -1,7 +1,15 @@
+import { encryptFlagValues } from 'flags'
+import { FlagValues } from 'flags/react'
+import { Suspense } from 'react'
 import { Footer } from '@/components/Footer'
 import { MainForm } from '@/components/MainForm'
 import { Navbar } from '@/components/Navbar'
 import { realTimeUpdateFlag } from '@/flags'
+
+async function ConfidentialFlagValues({ values }: { values: Record<string, unknown> }) {
+  const encrypted = await encryptFlagValues(values)
+  return <FlagValues values={encrypted} />
+}
 
 export default async function Home() {
   const realtimeEnabled = await realTimeUpdateFlag()
@@ -15,6 +23,10 @@ export default async function Home() {
       </main>
 
       <Footer />
+
+      <Suspense fallback={null}>
+        <ConfidentialFlagValues values={{ [realTimeUpdateFlag.key]: realtimeEnabled }} />
+      </Suspense>
     </>
   )
 }
