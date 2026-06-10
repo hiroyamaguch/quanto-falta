@@ -5,7 +5,16 @@ import { add, format } from 'date-fns'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
-import { LuAlarmClockCheck, LuClock, LuPlus, LuRotateCcw, LuTrash2, LuZap } from 'react-icons/lu'
+import {
+  LuAlarmClockCheck,
+  LuCheck,
+  LuClipboardCopy,
+  LuClock,
+  LuPlus,
+  LuRotateCcw,
+  LuTrash2,
+  LuZap
+} from 'react-icons/lu'
 import { calcDiferenceInMinutes } from '@/utils/parseHours'
 import { type CalcInputsTypes, calcValidator } from '@/validators/calculate'
 import { Input } from './Input'
@@ -32,6 +41,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const [submittedPeriods, setSubmittedPeriods] =
     useState<CalcInputsTypes['periods']>(DEFAULT_PERIODS)
   const [notificationFired, setNotificationFired] = useState<boolean>(false)
+  const [copied, setCopied] = useState<boolean>(false)
 
   const {
     handleSubmit,
@@ -39,6 +49,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     setValue,
     register,
     control,
+    watch,
     formState: { errors }
   } = useForm<CalcInputsTypes>({
     mode: 'all',
@@ -123,6 +134,25 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
       return newValue
     })
   }, [])
+
+  // Copy the filled check-in/check-out times as tab-separated values so they
+  // paste into adjacent Excel columns on a single row (e.g. "09:00\t12:00\t13:00\t18:00").
+  const handleCopyForExcel = useCallback(async () => {
+    const periods = watch('periods') ?? []
+    const times = periods
+      .flatMap((period) => [period.checkIn, period.checkOut])
+      .filter((time): time is string => Boolean(time))
+
+    if (times.length === 0) return
+
+    try {
+      await navigator.clipboard.writeText(times.join('\t'))
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard API unavailable (e.g. non-secure context) — silently ignore.
+    }
+  }, [watch])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: "This effect runs only once on mount."
   useEffect(() => {
@@ -475,6 +505,42 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
           >
             <LuRotateCcw size={14} aria-hidden="true" />
             Reset
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCopyForExcel}
+            title="Copy the filled times (tab-separated) to paste into Excel columns"
+            className="flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            style={{
+              backgroundColor: copied
+                ? 'var(--color-success-muted)'
+                : 'var(--color-surface-raised)',
+              color: copied ? 'var(--color-success)' : 'var(--color-muted)',
+              border: `1px solid ${copied ? 'var(--color-success)' : 'var(--color-border)'}`,
+              // @ts-expect-error CSS custom property
+              '--tw-ring-color': copied ? 'var(--color-success)' : 'var(--color-muted)',
+              '--tw-ring-offset-color': 'var(--color-background)'
+            }}
+            onMouseEnter={(e) => {
+              if (copied) return
+              const btn = e.currentTarget as HTMLButtonElement
+              btn.style.color = 'var(--color-foreground)'
+              btn.style.borderColor = 'var(--color-muted)'
+            }}
+            onMouseLeave={(e) => {
+              if (copied) return
+              const btn = e.currentTarget as HTMLButtonElement
+              btn.style.color = 'var(--color-muted)'
+              btn.style.borderColor = 'var(--color-border)'
+            }}
+          >
+            {copied ? (
+              <LuCheck size={14} aria-hidden="true" />
+            ) : (
+              <LuClipboardCopy size={14} aria-hidden="true" />
+            )}
+            {copied ? 'Copied!' : 'Copy for Excel'}
           </button>
 
           {realtimeEnabled && (
