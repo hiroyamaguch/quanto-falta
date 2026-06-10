@@ -1,13 +1,17 @@
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { VercelToolbar } from '@vercel/toolbar/next'
+import dynamic from 'next/dynamic'
 import { Nunito } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
 
-import { SentryToolbar } from '@/components/SentryToolbar'
 import './globals.css'
 import { Metadata } from 'next'
+
+const SentryToolbar = dynamic(() =>
+  import('@/components/SentryToolbar').then((mod) => mod.SentryToolbar)
+)
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -40,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SpeedInsights />
         {shouldInjectToolbar && <VercelToolbar />}
-        <SentryToolbar />
+        {shouldInjectToolbar && <SentryToolbar />}
       </body>
     </html>
   )
