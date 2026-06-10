@@ -1,7 +1,7 @@
 'use client'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { add, differenceInMinutes, format } from 'date-fns'
+import { add, format } from 'date-fns'
 import type React from 'react'
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { type SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
@@ -29,7 +29,8 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
   const [now, setNow] = useState<Date | null>(null)
   const [realtimeMode, setRealtimeMode] = useState<boolean>(false)
   const [lastCalculatedAt, setLastCalculatedAt] = useState<Date | null>(null)
-  const [baseMinutesLeft, setBaseMinutesLeft] = useState<number>(480)
+  const [submittedPeriods, setSubmittedPeriods] =
+    useState<CalcInputsTypes['periods']>(DEFAULT_PERIODS)
   const [notificationFired, setNotificationFired] = useState<boolean>(false)
 
   const {
@@ -93,14 +94,17 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     return true
   }, [])
 
-  const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
+  const computeMinutesLeft = useCallback((periods: CalcInputsTypes['periods'], wdt: number) => {
     let totalHoursWorked = 0
-    for (const period of data.periods) {
+    for (const period of periods) {
       totalHoursWorked += calcDiferenceInMinutes(period.checkIn, period.checkOut ?? '')
     }
-    const calculatedMinutes = workDayTime - totalHoursWorked
-    setMinutesLeft(calculatedMinutes)
-    setBaseMinutesLeft(calculatedMinutes)
+    return wdt - totalHoursWorked
+  }, [])
+
+  const onSubmit: SubmitHandler<CalcInputsTypes> = (data) => {
+    setMinutesLeft(computeMinutesLeft(data.periods, workDayTime))
+    setSubmittedPeriods(data.periods)
     setLastCalculatedAt(new Date())
     setNow(new Date())
     setNotificationFired(false)
@@ -155,8 +159,7 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     if (!realtimeEnabled || !realtimeMode || !lastCalculatedAt) return
 
     const updateMinutes = () => {
-      const elapsed = differenceInMinutes(new Date(), lastCalculatedAt)
-      setMinutesLeft(baseMinutesLeft - elapsed)
+      setMinutesLeft(computeMinutesLeft(submittedPeriods, workDayTime))
       setNow(new Date())
     }
 
@@ -164,7 +167,14 @@ export const MainForm: React.FC<MainFormProps> = ({ realtimeEnabled }) => {
     const interval = setInterval(updateMinutes, 60000)
 
     return () => clearInterval(interval)
-  }, [realtimeMode, lastCalculatedAt, baseMinutesLeft, realtimeEnabled])
+  }, [
+    realtimeMode,
+    lastCalculatedAt,
+    submittedPeriods,
+    workDayTime,
+    realtimeEnabled,
+    computeMinutesLeft
+  ])
 
   const strokeDashoffset = CIRCUMFERENCE - (percentage / 100) * CIRCUMFERENCE
   const ringColor = isDone ? 'var(--color-success)' : 'var(--color-brand)'
