@@ -13,7 +13,7 @@ module.exports = withVercelToolbar(nextConfig)
 
 // Injected content via Sentry wizard below
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require("@sentry/nextjs/config");
 
 module.exports = withSentryConfig(module.exports, {
   // For all available options, see:
